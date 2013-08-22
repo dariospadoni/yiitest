@@ -1,9 +1,9 @@
 <?php
-$this->pageTitle=Yii::app()->name . ' - Error';
-$this->pageCaption = 'Error';
+$this->pageTitle=Yii::app()->name . ' - Errore';
+$this->pageCaption = 'Errore';
 $this->pageDescription = $code;
 $this->breadcrumbs=array(
-	'Error',
+	'Errore',
 );
 ?>
 

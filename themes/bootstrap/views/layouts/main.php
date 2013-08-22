@@ -32,8 +32,8 @@
 				<?php $this->widget('zii.widgets.CMenu',array(
 					'items'=>array(
 						array('label'=>'Home', 'url'=>array('/site/index')),
-						array('label'=>'Pagine', 'url'=>array('/pagina/index')),
-						array('label'=>'Prestazioni', 'url'=>array('/prestazione/index')),
+						array('label'=>'Pagine', 'url'=>array('/pagina/index'),'visible'=> isSet(Yii::app()->user->role) && Yii::app()->user->role =='admin'),
+						array('label'=>'Prestazioni', 'url'=>array('/prestazione/index'),'visible'=> isSet(Yii::app()->user->role) && Yii::app()->user->role=='admin' ),
 					),
 					'htmlOptions'=>array(
 						'class'=>'nav',
@@ -41,7 +41,9 @@
 				)); ?>
 				<?php $this->widget('zii.widgets.CMenu',array(
 					'items'=>array(
-						array('label'=>'Logout', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest, 'htmlOptions'=>array('class'=>'btn'))
+                        array('label'=>'Utente: '.Yii::app()->user->name, 'url'=>'#', 'htmlOptions'=>array('class'=>'btn'),'visible'=> isSet(Yii::app()->user->role)),
+						array('label'=>'Logout', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest, 'htmlOptions'=>array('class'=>'btn')),
+                        array('label'=>'Login', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest, 'htmlOptions'=>array('class'=>'btn'))
 					),
 					'htmlOptions'=>array(
 						'class'=>'nav pull-right',

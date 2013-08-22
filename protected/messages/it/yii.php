@@ -208,4 +208,5 @@ return array (
   'Go to page: ' => 'Vai alla pagina: ',
   'Last &gt;&gt;' => 'Ultimo &gt;&gt;',
   'Next &gt;' => 'Successivo &gt;',
+
 );

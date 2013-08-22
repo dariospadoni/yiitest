@@ -1,13 +1,11 @@
 <?php
 $this->pageCaption='Login';
 $this->pageTitle=Yii::app()->name . ' - ' . $this->pageCaption;
-$this->pageDescription="You've been here before, haven't you?";
+//$this->pageDescription=You've been here before, haven't you?";
 $this->breadcrumbs=array(
 	'Login',
 );
 ?>
-
-<p>Please fill out the following form with your login credentials:</p>
 
 <div class="form">
 <?php $form=$this->beginWidget('BActiveForm', array(
@@ -19,7 +17,7 @@ $this->breadcrumbs=array(
 )); ?>
 
 	<?php $this->widget('BAlert',array(
-		'content'=>'<p>Fields with <span class="required">*</span> are required.</p>',
+		'content'=>'<p>I campi contrassegnati da <span class="required">*</span> sono obbligatori.</p>',
 	)); ?>
 
 	<div class="<?php echo $form->fieldClass($model, 'username'); ?>">
@@ -35,9 +33,6 @@ $this->breadcrumbs=array(
 		<div class="controls">
 			<?php echo $form->passwordField($model,'password'); ?>
 			<?php echo $form->error($model,'password'); ?>
-			<span class="help-block">
-				Hint: You may login with <tt>demo/demo</tt> or <tt>admin/admin</tt>.
-			</span>
 		</div>
 	</div>
 
