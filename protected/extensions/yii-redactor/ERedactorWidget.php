@@ -64,7 +64,8 @@ class ERedactorWidget extends CInputWidget {
 		if ($this->hasModel()) {
 			echo CHtml::activeTextArea($this->model, $this->attribute, $this->htmlOptions);
 		} else if ($this->selector !== null) {
-			echo CHtml::textArea($this->name, $this->value, $this->htmlOptions);
+            //dario: la cancello se no mi genera una textarea vuota.
+		//	echo CHtml::textArea($this->name, $this->value, $this->htmlOptions);
 		}
 	}
 

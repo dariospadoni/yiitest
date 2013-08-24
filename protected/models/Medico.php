@@ -5,16 +5,17 @@
  *
  * The followings are the available columns in table 'gmc_medico':
  * @property integer $id_medico
- * @property string $nome
- * @property string $cognome
- * @property string $email
- * @property string $password
+ * @property integer $id_user
  * @property string $specializzazione
  * @property string $formazione
  * @property string $esperienze_precedenti
  * @property string $attivita_accademica
  * @property string $attivita_scientifica
  * @property string $pubblicazioni
+ * @property string $foto
+ *
+ * The followings are the available model relations:
+ * @property User $idUser
  */
 class Medico extends CActiveRecord
 {
@@ -34,13 +35,12 @@ class Medico extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('nome, cognome, email, password', 'required'),
-			array('nome, cognome, email', 'length', 'max'=>100),
-			array('password', 'length', 'max'=>50),
-			array('specializzazione, formazione, esperienze_precedenti, attivita_accademica, attivita_scientifica, pubblicazioni', 'safe'),
+			array('id_user', 'required'),
+			array('id_user', 'numerical', 'integerOnly'=>true),
+			array('specializzazione, formazione, esperienze_precedenti, attivita_accademica, attivita_scientifica, pubblicazioni, foto', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id_medico, nome, cognome, email, password, specializzazione, formazione, esperienze_precedenti, attivita_accademica, attivita_scientifica, pubblicazioni', 'safe', 'on'=>'search'),
+			array('id_medico, id_user, specializzazione, formazione, esperienze_precedenti, attivita_accademica, attivita_scientifica, pubblicazioni, foto', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -52,6 +52,7 @@ class Medico extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'idUser' => array(self::BELONGS_TO, 'User', 'id_user'),
 		);
 	}
 
@@ -62,16 +63,14 @@ class Medico extends CActiveRecord
 	{
 		return array(
 			'id_medico' => 'Id Medico',
-			'nome' => 'Nome',
-			'cognome' => 'Cognome',
-			'email' => 'Email',
-			'password' => 'Password',
+			'id_user' => 'Id User',
 			'specializzazione' => 'Specializzazione',
 			'formazione' => 'Formazione',
 			'esperienze_precedenti' => 'Esperienze Precedenti',
-			'attivita_accademica' => 'Attivita Accademica',
-			'attivita_scientifica' => 'Attivita Scientifica',
+			'attivita_accademica' => 'Attività Accademica',
+			'attivita_scientifica' => 'Attività Scientifica',
 			'pubblicazioni' => 'Pubblicazioni',
+			'foto' => 'Foto',
 		);
 	}
 
@@ -94,16 +93,14 @@ class Medico extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id_medico',$this->id_medico);
-		$criteria->compare('nome',$this->nome,true);
-		$criteria->compare('cognome',$this->cognome,true);
-		$criteria->compare('email',$this->email,true);
-		$criteria->compare('password',$this->password,true);
+		$criteria->compare('id_user',$this->id_user);
 		$criteria->compare('specializzazione',$this->specializzazione,true);
 		$criteria->compare('formazione',$this->formazione,true);
 		$criteria->compare('esperienze_precedenti',$this->esperienze_precedenti,true);
 		$criteria->compare('attivita_accademica',$this->attivita_accademica,true);
 		$criteria->compare('attivita_scientifica',$this->attivita_scientifica,true);
 		$criteria->compare('pubblicazioni',$this->pubblicazioni,true);
+		$criteria->compare('foto',$this->foto,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

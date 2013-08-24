@@ -34,6 +34,7 @@
 						array('label'=>'Home', 'url'=>array('/site/index')),
 						array('label'=>'Pagine', 'url'=>array('/pagina/index'),'visible'=> isSet(Yii::app()->user->role) && Yii::app()->user->role =='admin'),
 						array('label'=>'Prestazioni', 'url'=>array('/prestazione/index'),'visible'=> isSet(Yii::app()->user->role) && Yii::app()->user->role=='admin' ),
+                        array('label'=>'Medici', 'url'=>array('/medico/index'),'visible'=> isSet(Yii::app()->user->role) && Yii::app()->user->role=='admin' ),
 					),
 					'htmlOptions'=>array(
 						'class'=>'nav',
