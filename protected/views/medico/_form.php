@@ -1,6 +1,12 @@
+<link  rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/jquery.fileupload-ui.css" />
+
+
+
+
 <style>
     .form-horizontal .control-label { float:none; width:auto; text-align: left;}
     [class*="span"] { margin-left:0;}
+    #fileupload { height:110px;}/*alta quanto l'immagine di preview */
 </style>
 
 
@@ -21,6 +27,9 @@
 
 	<?php echo $form->errorSummary($model); ?>
 
+    <?php if  ( ! $model->isNewRecord() ) { ?>
+        <?php echo $form->hiddenField($model,'medico[id_medico]'); ?>
+    <?php } ?>
 
     <div class="row">
 
@@ -49,17 +58,34 @@
                 </div>
             </div>
 
-            <div class="<?php echo $form->fieldClass($model, 'password'); ?> span2">
-                <?php echo $form->labelEx($model,'password'); ?>
-                <div class="input">
-                    <?php echo $form->textField($model,'password'); ?>
-                    <?php echo $form->error($model,'password'); ?>
+            <?php if ($model->isNewRecord() ) { ?>
+
+                <div class="<?php echo $form->fieldClass($model, 'password'); ?> span2">
+                    <?php echo $form->labelEx($model,'password'); ?>
+                    <div class="input">
+                        <?php echo $form->textField($model,'password'); ?>
+                        <?php echo $form->error($model,'password'); ?>
+                    </div>
                 </div>
-            </div>
 
-
+            <?php } ?>
     </div>
 
+
+    <div class="row">
+        <?php echo $form->labelEx($model,'Foto'); ?>
+        <span class="span2 btn fileinput-button">
+            <span id="userImagePreview" >
+                <?php if ($model->isNewRecord() || $model->getImageData()=="" ) { ?>
+                    <img  width="100" src="<?php echo Yii::app()->request->baseUrl; ?>/images/user.jpg" alt="foto medico"/>
+                <?php } else { ?>
+                    <img src="data:image/gif;base64,<?php echo $model->getImageData(); ?>"  alt="foto medico"/>
+                <?php  } ?>
+            </span>
+            <?php echo $form->hiddenField($model,'medico[foto]', array('id'=>'hdnFotoMedico')); ?>
+            <input id="fileupload" type="file" name="files[]"  />
+     </span>
+    </div>
 
 
     <div class="<?php echo $form->fieldClass($model, 'medico[specializzazione]'); ?>">
@@ -104,25 +130,13 @@
 
     <div class="<?php echo $form->fieldClass($model, 'medico[pubblicazioni]'); ?>">
         <?php echo $form->labelEx($model,'Pubblicazioni'); ?>
+
+
         <div class="input">
             <?php echo $form->textArea($model,'medico[pubblicazioni]',array('rows'=>6, 'cols'=>50, 'class'=>'textarea')); ?>
             <?php echo $form->error($model,'medico[pubblicazioni]'); ?>
         </div>
     </div>
-
-
-    <div class="row">
-        <?php echo $form->hiddenField($model,'medico[foto]' ); ?>
-        <?php echo $form->fileField($model,'medico[foto]', array('id'=>'fileupload', 'name'=>'files[]')); ?>
-    </div>
-
-
-    <!-- The global progress bar -->
-    <div id="progress" class="progress">
-        <div class="bar"></div>
-    </div>
-    <!-- The container for the uploaded files -->
-    <div id="files" class="files"></div>
 
 
 
@@ -153,15 +167,18 @@ $this->widget('ERedactorWidget',array(
 
 ?>
 
-
-
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/uploader/jquery.ui.widget.js"></script>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/uploader/load-image.min.js"></script>
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/uploader/jquery.iframe-transport.js"></script>
+
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/uploader/jquery.fileupload.js"></script>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/uploader/jquery.fileupload-process.js"></script>
+<script src="<?php echo Yii::app()->request->baseUrl; ?>/js/uploader/jquery.fileupload-image.js"></script>
+
+
 
 <style>
     #allegato-prestazione-Create-form {display:none;}
-    #progress{display:none;}
 </style>
 
 <script>
@@ -174,92 +191,45 @@ $this->widget('ERedactorWidget',array(
             $(".btn-upload").prop('disabled', $("#AllegatoDto_nome").val()=="");
         });
 
-        var uploadButton = $('<button/>')
-            .addClass('btn btn-primary btn-upload')
-            .prop('disabled', false)
-            .text('Salva')
-            .on('click', function () {
-
-                var $this = $(this),
-                    data = $this.data();
-                data.submit().success(function(result, textStatus, jqXHR){
-                    console.log("submit success");
-                    $("#progress").hide();
-                    $("#files").empty();
-
-                });
-                $('#progress').show();
-                $this
-                    .off('click')
-                    .text('Abort')
-                    .on('click', function () {
-                        console.log("abort");
-                        $this.remove();
-                        data.abort();
-                    });
-                return false;
-            });
 
         $('#fileupload').fileupload({
-            url:"<?php echo Yii::app()->request->baseUrl; ?>"+"/php/fileUpload/index.php",
+            url:"<?php echo Yii::app()->request->baseUrl; ?>"+"/php/fileUpload/index.php?upload_dir=tmp",
             dataType: 'json',
-            autoUpload: false,
+            autoUpload: true,
             maxFileSize: 500000, // 500KB
             previewMaxWidth: 100,
             previewMaxHeight: 100,
             previewCrop: true,
             acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-            progressall: function (e, data) {
-                var progress = parseInt(data.loaded / data.total * 100, 10);
-                $('#progress .bar').css(
-                    'width',
-                    progress + '%'
-                );
+        }).on('fileuploadprocessalways', function (e, data) {
+            var index = data.index,
+                file = data.files[index],
+                node = $('#userImagePreview');
+
+            if (file.preview) {
+                node.html(file.preview);
             }
-        }).on('fileuploadadd', function (e, data) {
-                data.context = $('<div/>').appendTo('#files');
-                $.each(data.files, function (index, file) {
-                    var node = $('<p/>')
-                        .append($('<span/>').text(file.name));
-                    if (!index) {
-                        node
-                            .append('<br>')
-                            .append(uploadButton.clone(true).data(data));
-                    }
-                    node.appendTo(data.context);
-                });
-            }).on('fileuploadprocessalways', function (e, data) {
-                var index = data.index,
-                    file = data.files[index],
-                    node = $(data.context.children()[index]);
-                if (file.preview) {
-                    node
-                        .prepend('<br>')
-                        .prepend(file.preview);
-                }
-                if (file.error) {
-                    node
-                        .append('<br>')
-                        .append(file.error);
-                }
-                if (index + 1 === data.files.length) {
-                    data.context.find('button')
-                        .text('Upload')
-                        .prop('disabled', !!data.files.error);
-                }
-            }).on('fileuploadfail', function (e, data) {
-                if (data.errorThrown=="abort")
-                {
-                    console.log("upload aborted by the user");
-                    return;
-                }
-                $.each(data.result.files, function (index, file) {
-                    var error = $('<span/>').text(file.error);
-                    $(data.context.children()[index])
-                        .append('<br>')
-                        .append(error);
-                });
-            }).prop('disabled', !$.support.fileInput)
-            .parent().addClass($.support.fileInput ? undefined : 'disabled');
+            if (file.error) {
+                node
+                    .append('<br>')
+                    .append(file.error);
+            }
+        }).on('fileuploaddone',function(e,data){
+                $("#hdnFotoMedico").val(data.result.files[0].url);
+        })
+        .on('fileuploadfail', function (e, data) {
+            if (data.errorThrown=="abort")
+            {
+                console.log("upload aborted by the user");
+                return;
+            }
+            $.each(data.result.files, function (index, file) {
+                var error = $('<span/>').text(file.error);
+                $(data.context.children()[index])
+                    .append('<br>')
+                    .append(error);
+            });
+        }).prop('disabled', !$.support.fileInput)
+        .parent().addClass($.support.fileInput ? undefined : 'disabled');
     });
 </script>

@@ -1,18 +1,17 @@
 <?php
-$this->pageCaption='Update Medico '.$model->id_medico;
-$this->pageTitle=Yii::app()->name . ' - ' . $this->pageCaption;
+$this->pageCaption='Modifica scheda medico '.$model->nomeCompleto();
+//$this->pageTitle=Yii::app()->name . ' - ' . $this->pageCaption;
 $this->pageDescription='';
 $this->breadcrumbs=array(
-	'Medicos'=>array('index'),
-	$model->id_medico=>array('view','id'=>$model->id_medico),
-	'Update',
+	'Medici'=>array('index'),
+	$model->nomeCompleto()=>array('view','id'=>$model->id_user),
+	'Modifica',
 );
 
 $this->menu=array(
-	array('label'=>'List Medicos', 'url'=>array('index')),
-	array('label'=>'Create Medico', 'url'=>array('create')),
-	array('label'=>'View Medico', 'url'=>array('view', 'id'=>$model->id_medico)),
-	array('label'=>'Manage Medicos', 'url'=>array('admin')),
+    array('label'=>'Elenco medici', 'url'=>array('index')),
+	array('label'=>'Visualizza medico', 'url'=>array('view', 'id'=>$model->id_user)),
+	//array('label'=>'Manage Medicos', 'url'=>array('admin')),
 );
 ?>
 

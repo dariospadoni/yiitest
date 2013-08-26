@@ -16,9 +16,19 @@ class UserMedico  extends CFormModel {
     public $password;
     public $medico;
 
+    public function getImageData (){
+        if (isset($this->medico->foto))
+            return base64_encode ($this->medico->foto);
+        else
+            return "";
+    }
+
+    public function nomeCompleto (){
+        return $this->nome . " " . $this->cognome;
+    }
 
     public function isNewRecord(){
-        return true;
+        return ! isSet ($this->id_user );
     }
 
 
@@ -34,7 +44,7 @@ class UserMedico  extends CFormModel {
             $this->cognome = $user->cognome;
             $this->email = $user->email;
             $this->password = $user->password ;
-            $this->medico = Medico::model()->find('id_user=:id_user');
+            $this->medico = Medico::model()->find('id_user='. $this->id_user);
         }
     }
 
@@ -47,6 +57,15 @@ class UserMedico  extends CFormModel {
         );
     }
 
+    public function search()
+    {
+        $criteria=new CDbCriteria;
+        $criteria->compare('nome','nome',true);
+
+        return new CActiveDataProvider($this, array(
+            'criteria'=>$criteria,
+        ));
+    }
 
 
 }

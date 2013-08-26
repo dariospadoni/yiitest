@@ -12,4 +12,13 @@
 
 error_reporting(E_ALL | E_STRICT);
 require('UploadHandler.php');
-$upload_handler = new UploadHandler();
+//
+//if (isset ($_GET['upload_dir']))
+//    $upload_handler = new UploadHandler(
+//        array(
+//            'upload_dir' => dirname($_SERVER["SCRIPT_FILENAME"]).'/'.$_GET['upload_dir'].'/',
+//            'upload_url' => '/'.$_GET['upload_dir'].'/',
+//        )
+//    );
+//else
+    $upload_handler = new UploadHandler();

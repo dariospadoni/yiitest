@@ -12,6 +12,7 @@ $this->menu=array(
 	array('label'=>'Create Medico', 'url'=>array('create')),
 );
 
+
 Yii::app()->clientScript->registerScript('search', "
 $('.search-button').click(function(){
 	$('.search-form').toggle();

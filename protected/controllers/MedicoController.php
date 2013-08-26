@@ -27,7 +27,7 @@ class MedicoController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
+				'actions'=>array('index','view','search'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -50,8 +50,11 @@ class MedicoController extends Controller
 	 */
 	public function actionView($id)
 	{
+        $user= User::model()->findByPk($id);
+        $model = new UserMedico($user);
+
 		$this->render('view',array(
-			'model'=>$this->loadModel($id),
+			'model'=>$model,
 		));
 	}
 
@@ -77,6 +80,11 @@ class MedicoController extends Controller
             {
                 $medico = new Medico();
                 $medico->attributes=$_POST['UserMedico']['medico'];
+                if (isset ($medico->foto) )
+                {
+                    $medico->foto =  file_get_contents(  $medico->foto);
+                    //unlink ($medico->foto);
+                }
                 $medico->id_user = $user->id_user;
                 if ( $medico->save())
                 {
@@ -92,6 +100,7 @@ class MedicoController extends Controller
 		));
 	}
 
+
 	/**
 	 * Updates a particular model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
@@ -99,18 +108,35 @@ class MedicoController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
-		$model=$this->loadModel($id);
+        $user = User::model()->findByPk($id);
+        $model = new UserMedico($user);
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Medico']))
-		{
-			$model->attributes=$_POST['Medico'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id_medico));
-		}
+        if(isset($_POST['UserMedico']))
+        {
+            $user->attributes=$_POST['UserMedico'];
 
+            if($user->save())
+            {
+                $medico = Medico::model()->find("id_medico=:id_medico",array('id_medico'=>$_POST['UserMedico']['medico']['id_medico'] ));
+                $medico->attributes=$_POST['UserMedico']['medico'];
+                if (isset ($medico->foto)&& $medico->foto!='' )
+                {
+                    $medico->foto =  file_get_contents(  $medico->foto);
+                    //unlink ($medico->foto);
+                }
+
+                if ( $medico->save())
+                {
+                    $this->redirect(array('view','id'=>$medico->id_user));
+                }
+
+            }
+        }
+
+        $this->layout='column1';
 		$this->render('update',array(
 			'model'=>$model,
 		));
@@ -141,21 +167,88 @@ class MedicoController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Medico');
+        $model=new UserMedico(null);
+
+        $data =  Array();
+        $criteria = new CDbCriteria;
+        $criteria->condition = "tipo='medico'";
+        $userMedici = User::model()->findAll($criteria);
+
+        foreach ($userMedici as $user)
+            array_push($data, new UserMedico($user));
+
+
+        $dataProvider=new CArrayDataProvider ($data,array(
+            'keyField'=>'id_user',
+        ));
+
 		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
+			'model'=>$model,
+            'dataProvider'=>$dataProvider,
 		));
+
 	}
+
+    public function actionSearch()
+    {
+        $model=new UserMedico(null);
+        $model->unsetAttributes();  // clear any default values
+
+        $data =  Array();
+
+        $criteria = new CDbCriteria;
+        $criteria->condition = "tipo='medico'";
+
+        if( $_GET['UserMedico']['nome']!="" )
+        {
+            $criteria->addSearchCondition( 'nome', $_GET['UserMedico']['nome'], true, 'AND' );
+            $model->nome =  $_GET['UserMedico']['nome'];
+        }
+        if(  $_GET['UserMedico']['cognome']!="" )
+        {
+            $criteria->addSearchCondition( 'cognome', $_GET['UserMedico']['cognome'], true, 'AND' );
+            $model->cognome=  $_GET['UserMedico']['cognome'];
+        }
+
+        $userMedici = User::model()->findAll($criteria);
+
+        foreach ($userMedici as $user)
+        {
+            //ulteriori filtri sulla tabella medico
+            $medico = new UserMedico($user);
+
+            if ( isset($_GET['UserMedico']['medico']['specializzazione'])==false ||
+                isset($_GET['UserMedico']['medico']['specializzazione']) && $medico->medico->specializzazione==$_GET['UserMedico']['medico']['specializzazione'])
+                array_push($data, $medico );
+
+            if ($_GET['UserMedico']['medico']['specializzazione'])
+                $model->specializzazione =$_GET['UserMedico']['medico']['specializzazione'];
+
+            array_push($data, $medico );
+        }
+
+
+        $dataProvider=new CArrayDataProvider ($data,array(
+            'keyField'=>'id_user',
+        ));
+
+        $this->render('index',array(
+            'model'=>$model,
+            'dataProvider'=>$dataProvider,
+        ));
+
+    }
 
 	/**
 	 * Manages all models.
 	 */
 	public function actionAdmin()
 	{
-		$model=new Medico('search');
+		$model=new Medico( "search");
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['Medico']))
 			$model->attributes=$_GET['Medico'];
+
 
 		$this->render('admin',array(
 			'model'=>$model,
