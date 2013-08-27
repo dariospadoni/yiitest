@@ -9,7 +9,14 @@
 				<?php echo $content; ?>
 			</div>
 			<div class="span2" style="margin-left:10px;">
-				<h3><?php echo CHtml::encode($this->sidebarCaption); ?></h3>
+
+                <h3>Cerca</h3>
+                <?php $this->renderPartial('_search',array(
+                    'model'=>$this->searchModel,
+                    'specializzazioni'=>$this->specializzazioni
+                )); ?>
+
+                <h3><?php echo CHtml::encode($this->sidebarCaption); ?></h3>
 				<?php
 					$this->beginWidget('zii.widgets.CPortlet', array(
 					));
@@ -20,10 +27,6 @@
 					$this->endWidget();
 				?>
 
-                <?php $this->renderPartial('_search',array(
-                    'model'=>$this->searchModel,
-                    'specializzazioni'=>$this->specializzazioni
-                )); ?>
 
 
 </div> <!-- /container -->

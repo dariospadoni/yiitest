@@ -85,13 +85,17 @@ class MedicoController extends Controller
                 $medico->attributes=$_POST['UserMedico']['medico'];
                 if (isset ($medico->foto) )
                 {
+                    $nomeFile = pathinfo($medico->foto)['basename'];
+
                     $medico->foto =  file_get_contents(  $medico->foto);
-                    //unlink ($medico->foto);
+
+                    unlink ($_SERVER['DOCUMENT_ROOT'] .   Yii::app()->baseUrl . '/php/fileUpload/files/'.$nomeFile);
+                    unlink ($_SERVER['DOCUMENT_ROOT'] .   Yii::app()->baseUrl . '/php/fileUpload/files/thumbnail/'.$nomeFile);
                 }
                 $medico->id_user = $user->id_user;
                 if ( $medico->save())
                 {
-                    $this->redirect(array('view','id'=>$medico->id_medico));
+                    $this->redirect(array('view','id'=>$medico->id_user));
                 }
 
             }
@@ -124,12 +128,15 @@ class MedicoController extends Controller
             if($user->save())
             {
                 $medico = Medico::model()->find("id_medico=:id_medico",array('id_medico'=>$_POST['UserMedico']['medico']['id_medico'] ));
+                $currImg = $medico->foto;
                 $medico->attributes=$_POST['UserMedico']['medico'];
-                if (isset ($medico->foto)&& $medico->foto!='' )
+                if ( !$this->IsNullOrEmpty( $_POST['UserMedico']['medico']['foto'])  )
                 {
-                    $medico->foto =  file_get_contents(  $medico->foto);
+                    $medico->foto =  file_get_contents(  $_POST['UserMedico']['medico']['foto'] );
                     //unlink ($medico->foto);
                 }
+                else
+                    $medico->foto = $currImg;
 
                 if ( $medico->save())
                 {
@@ -152,17 +159,22 @@ class MedicoController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		if(Yii::app()->request->isPostRequest)
-		{
-			// we only allow deletion via POST request
-			$this->loadModel($id)->delete();
+//		if(Yii::app()->request->isPostRequest)
+//		{
+        // we only allow deletion via POST request
 
-			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-			if(!isset($_GET['ajax']))
-				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
-		}
-		else
-			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
+        $user = User::model()->findByPk($id);
+        $medico = Medico::model()->find('id_user=:user',array( 'user'=>$id));
+        $medico->delete();
+        $user->delete();
+
+        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+        if(!isset($_GET['ajax']))
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
+
+//		}
+//		else
+//			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
 	}
 
 	/**
@@ -174,8 +186,9 @@ class MedicoController extends Controller
 
         $data =  Array();
         $criteria = new CDbCriteria;
+        $criteria->order = "cognome,nome";
         $criteria->condition = "tipo='medico'";
-        $userMedici = User::model()->findAll($criteria);
+        $userMedici = User::model()->findAll($criteria );
 
         foreach ($userMedici as $user)
             array_push($data, new UserMedico($user));
@@ -209,6 +222,7 @@ class MedicoController extends Controller
         $data =  Array();
 
         $criteria = new CDbCriteria;
+        $criteria->order = "cognome,nome";
         $criteria->condition = "tipo='medico'";
 
         if( $_GET['UserMedico']['nome']!="" )

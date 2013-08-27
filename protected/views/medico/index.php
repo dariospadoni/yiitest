@@ -3,7 +3,7 @@ $this->pageCaption='Medici';
 $this->pageTitle=Yii::app()->name . ' - ' . $this->pageCaption;
 $this->pageDescription='Elenco dei medici';
 $this->breadcrumbs=array(
-	'Medici',
+	'Elenco medici',
 );
 
 $this->menu=array(
@@ -11,36 +11,20 @@ $this->menu=array(
 	//array('label'=>'Gestione medici', 'url'=>array('admin')),
 );
 
-
-
-Yii::app()->clientScript->registerScript('search', "
-$('.search-button').click(function(){
-$('.search-form').toggle();
-return false;
-});
-$('.search-form form').submit(function(){
-$.fn.yiiGridView.update('medico-grid', {
-data: $(this).serialize()
-});
-return false;
-});
-");
 ?>
 
+<script tyoe="text/javascript">
 
-<?php echo CHtml::link('Ricerca','#',array('class'=>'search-button')); ?>
-
-<div class="search-form" style="display:none">
-    <?php $this->renderPartial('_search',array(
-        'model'=>$model,
-        'specializzazioni'=>$specializzazioni
-    )); ?>
-</div><!-- search-form -->
-
-
+    function PromptDeleteMedico (id){
+        var res = confirm ('Sei sicuro di voler eliminare questo medico?');
+        if (res==true)
+        {
+            window.location= '<?= Yii::app()->createUrl("/medico/delete")?>&id='+id;
+        }
+    }
+</script>
 
 <?php $this->widget('zii.widgets.CListView', array(
 	'dataProvider'=>$dataProvider,
 	'itemView'=>'_view',
-
 )); ?>

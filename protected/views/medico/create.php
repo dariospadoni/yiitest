@@ -4,7 +4,7 @@ $this->pageTitle=Yii::app()->name . ' - ' . $this->pageCaption;
 //$this->pageDescription='Define a new medico';
 $this->breadcrumbs=array(
 	'Medici'=>array('index'),
-	'Nuovo',
+	'Nuovo medico',
 );
 
 $this->menu=array(

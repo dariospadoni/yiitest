@@ -32,9 +32,9 @@
 				<?php $this->widget('zii.widgets.CMenu',array(
 					'items'=>array(
 						array('label'=>'Home', 'url'=>array('/site/index')),
-						array('label'=>'Pagine', 'url'=>array('/pagina/index'),'visible'=> isSet(Yii::app()->user->role) && Yii::app()->user->role =='admin'),
-						array('label'=>'Prestazioni', 'url'=>array('/prestazione/index'),'visible'=> isSet(Yii::app()->user->role) && Yii::app()->user->role=='admin' ),
-                        array('label'=>'Medici', 'url'=>array('/medico/index'),'visible'=> isSet(Yii::app()->user->role) && Yii::app()->user->role=='admin' ),
+						array('label'=>'Pagine', 'url'=>array('/pagina/index'),'visible'=> Yii::app()->user->isAdmin()),
+						array('label'=>'Prestazioni', 'url'=>array('/prestazione/index'),'visible'=> Yii::app()->user->isAdmin() ),
+                        array('label'=>'Medici', 'url'=>array('/medico/index'),'visible'=> Yii::app()->user->isAdmin() ),
 					),
 					'htmlOptions'=>array(
 						'class'=>'nav',

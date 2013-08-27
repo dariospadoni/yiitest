@@ -7,6 +7,7 @@
 <?php $form=$this->beginWidget('BActiveForm', array(
 	'action'=>Yii::app()->createUrl("medico/search"),
 	'method'=>'get',
+    'id'=>'medici-search-form'
 )); ?>
 
 	<div class="row">
@@ -34,8 +35,25 @@
 <br/>
 	<div class="actions">
 		<?php echo BHtml::submitButton('Cerca'); ?>
+        <?php echo BHtml::submitButton('Azzera', array('id'=>'form-reset-button','class'=>'btn')); ?>
 	</div>
 
 <?php $this->endWidget(); ?>
 
 </div><!-- search-form -->
+
+<script type="text/javascript">
+
+    (function(){
+        $('#form-reset-button').click(function()
+        {
+            $('#medici-search-form  input:text, #medici-search-form select').each(function(i, o)
+            {
+                $(o).val('');
+            });
+            //return false;
+        });
+
+    })();
+
+</script>

@@ -1,11 +1,11 @@
 <?php
-$this->pageCaption='Modifica scheda medico '.$model->nomeCompleto();
+$this->pageCaption='';
 //$this->pageTitle=Yii::app()->name . ' - ' . $this->pageCaption;
 $this->pageDescription='';
 $this->breadcrumbs=array(
 	'Medici'=>array('index'),
 	$model->nomeCompleto()=>array('view','id'=>$model->id_user),
-	'Modifica',
+	'Modifica dati medico',
 );
 
 $this->menu=array(

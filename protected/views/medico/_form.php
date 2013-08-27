@@ -82,7 +82,7 @@
                     <img src="data:image/gif;base64,<?php echo $model->getImageData(); ?>"  alt="foto medico"/>
                 <?php  } ?>
             </span>
-            <?php echo $form->hiddenField($model,'medico[foto]', array('id'=>'hdnFotoMedico')); ?>
+            <?php echo $form->hiddenField($model, 'medico[foto]', array('id'=>'hdnFotoMedico')); ?>
             <input id="fileupload" type="file" name="files[]"  />
      </span>
     </div>
@@ -177,22 +177,12 @@ $this->widget('ERedactorWidget',array(
 
 
 
-<style>
-    #allegato-prestazione-Create-form {display:none;}
-</style>
 
 <script>
 
     $(function () {
 
-        $("#btnAddAllegato").click(function(){ $("#allegato-prestazione-Create-form").show(); $("#btnAddAllegato").hide(); });
-
-        $("#AllegatoDto_nome").blur(function(){
-            $(".btn-upload").prop('disabled', $("#AllegatoDto_nome").val()=="");
-        });
-
-
-        $('#fileupload').fileupload({
+      $('#fileupload').fileupload({
             url:"<?php echo Yii::app()->request->baseUrl; ?>"+"/php/fileUpload/index.php?upload_dir=tmp",
             dataType: 'json',
             autoUpload: true,

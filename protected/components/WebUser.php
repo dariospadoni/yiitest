@@ -25,5 +25,24 @@ class WebUser extends CWebUser
         return ($operation === $role);
     }
 
+    private function matchRole($roleToMatch)
+    {
+        if (empty($this->id)) {
+            // Not identified => no rights
+            return false;
+        }
+        $role = $this->getState("role");
+        if (isset($role) && $role==$roleToMatch)
+            return true;
+        return false;
+    }
+
+    function isAdmin (){
+        return $this->matchRole('admin');
+    }
+
+    function isMedico(){
+        return $this->matchRole('medico');
+    }
 
 }
