@@ -27,11 +27,11 @@
         <div class="span2">
             <?php echo $form->label($model,'specializzazione'); ?>
             <div class="input">
-                <?php echo $form->textField($model,'medico[specializzazione]'); ?>
+                <?php echo $form->dropDownList($model, 'medico[specializzazione]', CHtml::listData( $specializzazioni, 'specializzazione', 'specializzazione'), array( 'empty'=>"Scegli...")); ?>
             </div>
         </div>
     </div>
-
+<br/>
 	<div class="actions">
 		<?php echo BHtml::submitButton('Cerca'); ?>
 	</div>

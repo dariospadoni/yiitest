@@ -86,12 +86,12 @@
             <input id="fileupload" type="file" name="files[]"  />
      </span>
     </div>
-
+<br/>
 
     <div class="<?php echo $form->fieldClass($model, 'medico[specializzazione]'); ?>">
 		<?php echo $form->labelEx($model,'Specializzazione'); ?>
 		<div class="input">
-			<?php echo $form->textArea($model,'medico[specializzazione]',array('rows'=>6, 'cols'=>50, 'class'=>'textarea')); ?>
+			<?php echo $form->textField($model,'medico[specializzazione]'); ?>
 			<?php echo $form->error($model,'medico[specializzazione]'); ?>
 		</div>
 	</div>
@@ -161,7 +161,7 @@ $this->widget('ERedactorWidget',array(
             'bold', 'italic', '|',
             'unorderedlist', 'orderedlist', 'outdent', 'indent', '|',)
     ),
-    //'model'=>$model,
+
      'selector'=>'.textarea'
 ));
 

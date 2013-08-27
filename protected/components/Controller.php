@@ -26,4 +26,9 @@ class Controller extends CController
         $this->attachBehavior('bootstrap', new BController($this));
     }
 
+
+    public function IsNullOrEmpty($val){
+        return isset($val)==false || trim($val)==="";
+    }
+
 }

@@ -219,3 +219,4 @@ pip-log.txt
 .idea
 uploads/
 assets/
+php/fileUpload/files

@@ -20,6 +20,10 @@
 					$this->endWidget();
 				?>
 
+                <?php $this->renderPartial('_search',array(
+                    'model'=>$this->searchModel,
+                    'specializzazioni'=>$this->specializzazioni
+                )); ?>
 
 
 </div> <!-- /container -->

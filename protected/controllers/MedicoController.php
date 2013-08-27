@@ -2,6 +2,9 @@
 
 class MedicoController extends Controller
 {
+
+    public $specializzazioni;
+    public $searchModel;
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
@@ -182,9 +185,18 @@ class MedicoController extends Controller
             'keyField'=>'id_user',
         ));
 
+        $specializzazioni = Medico::model()->findAll (array(
+            'select'=>'specializzazione',
+            'distinct'=>true,
+        )) ;
+
+        $this->searchModel = $model;
+        $this->specializzazioni=$specializzazioni;
+        $this->layout="searchColumn";
 		$this->render('index',array(
 			'model'=>$model,
             'dataProvider'=>$dataProvider,
+            'specializzazioni'=>$specializzazioni
 		));
 
 	}
@@ -214,17 +226,19 @@ class MedicoController extends Controller
 
         foreach ($userMedici as $user)
         {
-            //ulteriori filtri sulla tabella medico
-            $medico = new UserMedico($user);
+             //ulteriori filtri sulla tabella medico
+             $medico = new UserMedico($user);
 
-            if ( isset($_GET['UserMedico']['medico']['specializzazione'])==false ||
-                isset($_GET['UserMedico']['medico']['specializzazione']) && $medico->medico->specializzazione==$_GET['UserMedico']['medico']['specializzazione'])
+             if ( $this->IsNullOrEmpty ($_GET['UserMedico']['medico']['specializzazione']) ||
+                !$this->IsNullOrEmpty($_GET['UserMedico']['medico']['specializzazione']) && $medico->medico->specializzazione==$_GET['UserMedico']['medico']['specializzazione'])
                 array_push($data, $medico );
 
-            if ($_GET['UserMedico']['medico']['specializzazione'])
-                $model->specializzazione =$_GET['UserMedico']['medico']['specializzazione'];
 
-            array_push($data, $medico );
+             if ( ! $this->IsNullOrEmpty ( $_GET['UserMedico']['medico']['specializzazione']))
+             {
+                  $model->medico = new Medico();
+                  $model->medico->specializzazione =$_GET['UserMedico']['medico']['specializzazione'];
+             }
         }
 
 
@@ -232,8 +246,18 @@ class MedicoController extends Controller
             'keyField'=>'id_user',
         ));
 
+        $specializzazioni = Medico::model()->findAll (array(
+            'select'=>'specializzazione',
+            'distinct'=>true,
+        )) ;
+
+        $this->searchModel = $model;
+        $this->specializzazioni=$specializzazioni;
+
+        $this->layout="searchColumn";
         $this->render('index',array(
             'model'=>$model,
+            'specializzazioni'=> $specializzazioni,
             'dataProvider'=>$dataProvider,
         ));
 

@@ -29,9 +29,11 @@ return false;
 
 
 <?php echo CHtml::link('Ricerca','#',array('class'=>'search-button')); ?>
+
 <div class="search-form" style="display:none">
     <?php $this->renderPartial('_search',array(
         'model'=>$model,
+        'specializzazioni'=>$specializzazioni
     )); ?>
 </div><!-- search-form -->
 
