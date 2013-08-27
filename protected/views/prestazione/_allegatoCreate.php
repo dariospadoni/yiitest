@@ -4,7 +4,7 @@
 /* @var $form CActiveForm */
 ?>
 
-<button id="btnAddAllegato" >Aggiungi allegato</button>
+<button id="btnAddAllegato" class="btn btn-primary">Aggiungi allegato</button>
 
 <div class="form">
 

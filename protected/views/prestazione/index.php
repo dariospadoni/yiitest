@@ -3,12 +3,12 @@
 /* @var $dataProvider CActiveDataProvider */
 
 $this->breadcrumbs=array(
-	'Prestazioni',
+	'Elenco prestazioni',
 );
 
 $this->menu=array(
 	array('label'=>'Nuova prestazione', 'url'=>array('create')),
-	array('label'=>'Gestisci prestazioni', 'url'=>array('admin')),
+	//array('label'=>'Gestisci prestazioni', 'url'=>array('admin')),
 );
 ?>
 

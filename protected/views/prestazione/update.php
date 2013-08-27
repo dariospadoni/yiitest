@@ -5,7 +5,7 @@
 $this->breadcrumbs=array(
 	'Prestazioni'=>array('index'),
 	$model->nome=>array('view','id'=>$model->id_prestazione),
-	'Modifica',
+	'Modifica dati prestazione',
 );
 
 $this->menu=array(
@@ -16,14 +16,20 @@ $this->menu=array(
 );
 ?>
 
-<h1>Modifica prestazione <?php echo $model->nome; ?></h1>
+<ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+    <li class="active"><a  data-toggle="tab" href="#pane1">Dati</a></li>
+    <li><a data-toggle="tab"  href="#pane2">Allegati</a></li>
+</ul>
 
-<?php $this->renderPartial('_form', array('model'=>$model)); ?>
+<div class="tab-content">
 
-<h3> Allegati </h3>
-<?php
+    <div id="pane1" class="tab-pane active">
+        <?php $this->renderPartial('_form', array('model'=>$model)); ?>
+    </div>
 
-  $this->widget('zii.widgets.grid.CGridView', array(
+    <div id="pane2" class="tab-pane active">
+    <?php
+            $this->widget('zii.widgets.grid.CGridView', array(
         'id'=>'allegati-grid',
         'dataProvider'=> new CArrayDataProvider($model->allegati,array(
             'keyField'=>'id_allegato_prestazione'
@@ -47,11 +53,18 @@ $this->menu=array(
         )
     ));
 
-?>
+            $this->renderPartial('_allegatoCreate',array('model'=> new AllegatoDto($model->id_prestazione )));
+    ?>
+    </div>
+</div>
 
 
 
-<?php
-    $this->renderPartial('_allegatoCreate',array('model'=> new AllegatoDto($model->id_prestazione )));
-?>
 
+
+
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+        $('#tabs').tab();
+    });
+</script>

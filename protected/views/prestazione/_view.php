@@ -6,7 +6,7 @@
 <div class="view">
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('id_prestazione')); ?>:</b>
-	<?php echo CHtml::link(CHtml::encode($data->id_prestazione), array('view', 'id'=>$data->id_prestazione)); ?>
+	<?php echo CHtml::link(CHtml::encode($data->id_prestazione), array('update', 'id'=>$data->id_prestazione)); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('nome')); ?>:</b>

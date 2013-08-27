@@ -9,13 +9,13 @@
 				<?php echo $content; ?>
 			</div>
 			<div class="span2" style="margin-left:10px;">
-				<h3><?php echo CHtml::encode($this->sidebarCaption); ?></h3>
+                <span class="nav-header">Menu</span>
 				<?php
 					$this->beginWidget('zii.widgets.CPortlet', array(
 					));
 					$this->widget('zii.widgets.CMenu', array(
 						'items'=>$this->menu,
-						'htmlOptions'=>array('class'=>'operations'),
+						'htmlOptions'=>array('class'=>'nav nav-list'),
 					));
 					$this->endWidget();
 				?>
@@ -23,4 +23,7 @@
 
 
 </div> <!-- /container -->
+
+
+
 <?php $this->endContent(); ?>

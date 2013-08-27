@@ -1,8 +1,6 @@
 <link  rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/jquery.fileupload-ui.css" />
 
 
-
-
 <style>
     .form-horizontal .control-label { float:none; width:auto; text-align: left;}
     [class*="span"] { margin-left:0;}
@@ -164,7 +162,6 @@ $this->widget('ERedactorWidget',array(
 
      'selector'=>'.textarea'
 ));
-
 ?>
 
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/uploader/jquery.ui.widget.js"></script>
