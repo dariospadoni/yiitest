@@ -1,23 +1,23 @@
-    <?php
+<?php
 
 /**
- * This is the model class for table "gmc_pagina".
+ * This is the model class for table "gmc_fondo".
  *
- * The followings are the available columns in table 'gmc_pagina':
- * @property integer $id_pagina
+ * The followings are the available columns in table 'gmc_fondo':
+ * @property integer $id_fondo
  * @property string $nome
- * @property string $contenuto
- * @property integer $ordine
- * @property string $ultima_modifica
+ * @property string $descrizione
+ * @property string $sito_web
+ * @property string $logo
  */
-class Pagina extends CActiveRecord
+class Fondo extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'gmc_pagina';
+		return 'gmc_fondo';
 	}
 
 	/**
@@ -28,13 +28,13 @@ class Pagina extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('nome,area_sito, contenuto', 'required'),
-			array('ordine', 'numerical', 'integerOnly'=>true),
+			array('nome', 'required'),
 			array('nome', 'length', 'max'=>200),
-			array('ultima_modifica', 'safe'),
+			array('sito_web', 'length', 'max'=>256),
+			array('descrizione, logo', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id_pagina, nome, contenuto, ordine, ultima_modifica', 'safe', 'on'=>'search'),
+			array('id_fondo, nome, descrizione, sito_web, logo', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -55,12 +55,11 @@ class Pagina extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id_pagina' => 'Id Pagina',
+			'id_fondo' => 'Id Fondo',
 			'nome' => 'Nome',
-            'area_sito'=>'Area sito',
-			'contenuto' => 'Contenuto',
-			'ordine' => 'Ordine',
-			'ultima_modifica' => 'Ultima Modifica',
+			'descrizione' => 'Descrizione',
+			'sito_web' => 'Sito Web',
+			'logo' => 'Logo',
 		);
 	}
 
@@ -82,11 +81,11 @@ class Pagina extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id_pagina',$this->id_pagina);
+		$criteria->compare('id_fondo',$this->id_fondo);
 		$criteria->compare('nome',$this->nome,true);
-		$criteria->compare('contenuto',$this->contenuto,true);
-		$criteria->compare('ordine',$this->ordine);
-		$criteria->compare('ultima_modifica',$this->ultima_modifica,true);
+		$criteria->compare('descrizione',$this->descrizione,true);
+		$criteria->compare('sito_web',$this->sito_web,true);
+		$criteria->compare('logo',$this->logo,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -97,10 +96,22 @@ class Pagina extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Pagina the static model class
+	 * @return Fondo the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
 	}
+
+    public function getImageData (){
+        if (isset($this->logo))
+            return base64_encode ($this->logo);
+        else
+            return "";
+    }
+
+    public function isNewRecord(){
+        return ! isSet ($this->id_fondo );
+    }
+
 }

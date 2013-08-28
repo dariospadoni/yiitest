@@ -1,6 +1,6 @@
 <?php
-//$this->pageCaption='Scheda medico '.$model->nomeCompleto();
-//$this->pageTitle=Yii::app()->name . ' - ' . $this->pageCaption;
+$this->pageCaption='Scheda medico '.$model->nomeCompleto();
+$this->pageTitle=Yii::app()->name . ' - ' . $this->pageCaption;
 $this->pageDescription='';
 $this->breadcrumbs=array(
 	'Medici'=>array('index'),

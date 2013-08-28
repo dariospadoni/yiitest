@@ -4,7 +4,7 @@
 
 $this->breadcrumbs=array(
 	'Prestazioni'=>array('index'),
-	'Nuova',
+	'Nuova prestazione',
 );
 
 $this->menu=array(

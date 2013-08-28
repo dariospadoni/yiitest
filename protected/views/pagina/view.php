@@ -28,6 +28,7 @@ $this->menu=array(
     'htmlOptions' => array('cellpadding'=>'10'),
 	'attributes'=>array(
         'nome',
+        'area_sito',
         'ultima_modifica',
 		'contenuto:html',
     	),

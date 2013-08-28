@@ -4,7 +4,7 @@ $this->pageTitle=Yii::app()->name . ' - ' . $this->pageCaption;
 //$this->pageDescription='Define a new pagina';
 $this->breadcrumbs=array(
 	'Pagine'=>array('index'),
-	'Nuova',
+	'Nuova pagina',
 );
 
 $this->menu=array(

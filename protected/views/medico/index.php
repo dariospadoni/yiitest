@@ -13,7 +13,7 @@ $this->menu=array(
 
 ?>
 
-<script tyoe="text/javascript">
+<script type="text/javascript">
 
     function PromptDeleteMedico (id){
         var res = confirm ('Sei sicuro di voler eliminare questo medico?');

@@ -18,6 +18,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'dataProvider'=> $dataProvider,
     'columns'=> array(
         'nome',
+        'area_sito',
         array(
             'name'=>'ultima_modifica',
             'value'=>'date("j M Y", strtotime( $data->ultima_modifica))',

@@ -33,6 +33,7 @@
 					'items'=>array(
 						array('label'=>'Home', 'url'=>array('/site/index')),
 						array('label'=>'Pagine', 'url'=>array('/pagina/index'),'visible'=> Yii::app()->user->isAdmin()),
+                        array('label'=>'Fondi', 'url'=>array('/fondo/index'),'visible'=> Yii::app()->user->isAdmin()),
 						array('label'=>'Prestazioni', 'url'=>array('/prestazione/index'),'visible'=> Yii::app()->user->isAdmin() ),
                         array('label'=>'Medici', 'url'=>array('/medico/index'),'visible'=> Yii::app()->user->isAdmin() ),
 					),

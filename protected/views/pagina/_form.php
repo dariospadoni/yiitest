@@ -28,6 +28,14 @@ Yii::import('ext.yii-redactor.ERedactorWidget');
 		</div>
 	</div>
 
+    <div class="<?php echo $form->fieldClass($model, 'area_sito'); ?>">
+        <?php echo $form->labelEx($model,'area_sito'); ?>
+        <div class="input">
+            <?php echo $form->dropDownList($model,'area_sito',array("presentazione"=>"Presentazione","info"=>"Info Utili")); ?>
+            <?php echo $form->error($model,'area_sito'); ?>
+        </div>
+    </div>
+
 	<div class="<?php echo $form->fieldClass($model, 'contenuto'); ?>">
 		<?php echo $form->labelEx($model,'contenuto'); ?>
         <br/><br/>
