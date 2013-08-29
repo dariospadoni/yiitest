@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
 	<meta charset="utf-8">
 	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
@@ -10,7 +10,7 @@
 	<!-- Le styles -->
 	<link href="<?php echo Yii::app()->theme->baseUrl; ?>/css/bootstrap.min.css" rel="stylesheet">
 	<link href="<?php echo Yii::app()->theme->baseUrl; ?>/css/application.min.css" rel="stylesheet">
-	<link href="<?php echo Yii::app()->theme->baseUrl; ?>/css/bootstrap-responsive.css" rel="stylesheet">
+<!--	<link href="--><?php //echo Yii::app()->theme->baseUrl; ?><!--/css/bootstrap-responsive.css" rel="stylesheet">-->
 
 	<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 	<!--[if lt IE 9]>
@@ -22,6 +22,8 @@
 	<link rel="apple-touch-icon" href="<?php echo Yii::app()->request->baseUrl; ?>/images/apple-touch-icon.png">
 	<link rel="apple-touch-icon" sizes="72x72" href="<?php echo Yii::app()->request->baseUrl; ?>/images/apple-touch-icon-72x72.png">
 	<link rel="apple-touch-icon" sizes="114x114" href="<?php echo Yii::app()->request->baseUrl; ?>/images/apple-touch-icon-114x114.png">
+
+
 </head>
 
 <body>
@@ -36,6 +38,7 @@
                         array('label'=>'Fondi', 'url'=>array('/fondo/index'),'visible'=> Yii::app()->user->isAdmin()),
 						array('label'=>'Prestazioni', 'url'=>array('/prestazione/index'),'visible'=> Yii::app()->user->isAdmin() ),
                         array('label'=>'Medici', 'url'=>array('/medico/index'),'visible'=> Yii::app()->user->isAdmin() ),
+                        array('label'=>'Pazienti', 'url'=>array('/paziente/index'),'visible'=> Yii::app()->user->isAdmin() ),
 					),
 					'htmlOptions'=>array(
 						'class'=>'nav',

@@ -44,7 +44,7 @@
 
 <script type="text/javascript">
 
-    (function(){
+    $(function(){
         $('#form-reset-button').click(function()
         {
             $('#medici-search-form  input:text, #medici-search-form select').each(function(i, o)
@@ -54,6 +54,6 @@
             //return false;
         });
 
-    })();
+    });
 
 </script>
