@@ -1,26 +1,30 @@
 <?php
 
 /**
- * This is the model class for table "gmc_prestazione".
+ * This is the model class for table "gmc_fondo_prestazione".
  *
- * The followings are the available columns in table 'gmc_prestazione':
+ * The followings are the available columns in table 'gmc_fondo_prestazione':
+ * @property integer $id_fondo_prestazione
+ * @property integer $id_fondo
  * @property integer $id_prestazione
- * @property string $nome
- * @property string $codice
- * @property string $descrizione
- * @property string $prezzo
+ * @property integer $prezzo
  *
  * The followings are the available model relations:
- * @property AllegatoPrestazione[] $allegatoPrestaziones
+ * @property Prestazione $idPrestazione
+ * @property Fondo $idFondo
  */
-class Prestazione extends CActiveRecord
+class FondoPrestazione extends CActiveRecord
 {
+
+    public $nomeFondo;
+    public $nomePrestazione;
+
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'gmc_prestazione';
+		return 'gmc_fondo_prestazione';
 	}
 
 	/**
@@ -31,13 +35,11 @@ class Prestazione extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('nome, descrizione', 'required'),
-			array('nome', 'length', 'max'=>200),
-			array('codice', 'length', 'max'=>20),
-			array('prezzo', 'length', 'max'=>10),
+			array('id_fondo, id_prestazione, prezzo', 'required'),
+			array('id_fondo, id_prestazione, prezzo', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id_prestazione, nome, codice, descrizione, prezzo', 'safe', 'on'=>'search'),
+			array('id_fondo_prestazione, id_fondo, id_prestazione, prezzo', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -49,7 +51,8 @@ class Prestazione extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'allegatoPrestaziones' => array(self::HAS_MANY, 'AllegatoPrestazione', 'id_prestazione'),
+			'idPrestazione' => array(self::BELONGS_TO, 'Prestazione', 'id_prestazione'),
+			'idFondo' => array(self::BELONGS_TO, 'Fondo', 'id_fondo'),
 		);
 	}
 
@@ -59,10 +62,9 @@ class Prestazione extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
+			'id_fondo_prestazione' => 'Id Fondo Prestazione',
+			'id_fondo' => 'Id Fondo',
 			'id_prestazione' => 'Id Prestazione',
-			'nome' => 'Nome',
-			'codice' => 'Codice',
-			'descrizione' => 'Descrizione',
 			'prezzo' => 'Prezzo',
 		);
 	}
@@ -85,11 +87,10 @@ class Prestazione extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
+		$criteria->compare('id_fondo_prestazione',$this->id_fondo_prestazione);
+		$criteria->compare('id_fondo',$this->id_fondo);
 		$criteria->compare('id_prestazione',$this->id_prestazione);
-		$criteria->compare('nome',$this->nome,true);
-		$criteria->compare('codice',$this->codice,true);
-		$criteria->compare('descrizione',$this->descrizione,true);
-		$criteria->compare('prezzo',$this->prezzo,true);
+		$criteria->compare('prezzo',$this->prezzo);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -100,7 +101,7 @@ class Prestazione extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Prestazione the static model class
+	 * @return FondoPrestazione the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

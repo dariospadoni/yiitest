@@ -1,14 +1,12 @@
 <?php
 
-class PrestazioneController extends Controller
+class FondoPrestazioneController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
 	 */
 	public $layout='//layouts/column2';
-
-
 
 	/**
 	 * @return array action filters
@@ -17,7 +15,6 @@ class PrestazioneController extends Controller
 	{
 		return array(
 			'accessControl', // perform access control for CRUD operations
-			'postOnly + delete', // we only allow deletion via POST request
 		);
 	}
 
@@ -38,7 +35,7 @@ class PrestazioneController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete','AggiornaPrezzo','deleteFondo'),
+				'actions'=>array('admin','delete'),
 				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
@@ -47,30 +44,6 @@ class PrestazioneController extends Controller
 		);
 	}
 
-    //elimina associazione fondo-prestazione corrente
-    public function actionDeleteFondo($id){
-        if (!$this->isNullOrEmpty($id))
-        {
-            $fondoPrestazione = FondoPrestazione::model()->findByPk($id);
-            $fondoPrestazione->delete();
-        }
-    }
-
-    public function actionAggiornaPrezzo(){
-        if (! $this->isNullOrEmpty($_POST["id_fondo_prestazione"]) && ! $this->isNullOrEmpty($_POST["prezzo"]))
-        {
-            $fondoPrestazione = FondoPrestazione::model()->findByPk($_POST["id_fondo_prestazione"]);
-            if ($fondoPrestazione==null){
-                throw new CHttpException(404,'Fondo Prestazione non trovato');
-            }
-            if( isset ( $fondoPrestazione ))
-            {
-                $fondoPrestazione->prezzo = $_POST["prezzo"];
-                if($fondoPrestazione->save())
-                    echo $fondoPrestazione->prezzo;
-            }
-        }
-    }
 	/**
 	 * Displays a particular model.
 	 * @param integer $id the ID of the model to be displayed
@@ -88,19 +61,19 @@ class PrestazioneController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new Prestazione();
+		$model=new FondoPrestazione;
 
 		// Uncomment the following line if AJAX validation is needed
-		$this->performAjaxValidation($model);
+		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Prestazione']))
+		if(isset($_POST['FondoPrestazione']))
 		{
-			$model->attributes=$_POST['Prestazione'];
+			$model->attributes=$_POST['FondoPrestazione'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id_prestazione));
+				$this->redirect(array('view','id'=>$model->id_fondo_prestazione));
 		}
 
-		$this->render( 'create',array(
+		$this->render('create',array(
 			'model'=>$model,
 		));
 	}
@@ -112,39 +85,22 @@ class PrestazioneController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
-        $modelBase = $this->loadModel($id);
-		$model=new PrestazioneAllegati($modelBase);
+		$model=$this->loadModel($id);
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Prestazione']))
+		if(isset($_POST['FondoPrestazione']))
 		{
-			$model->attributes=$_POST['Prestazione'];
+			$model->attributes=$_POST['FondoPrestazione'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id_prestazione));
+				$this->redirect(array('view','id'=>$model->id_fondo_prestazione));
 		}
-
-        if(isset($_POST['AllegatoDto']))
-        {
-            $allegato = new AllegatoPrestazione();
-            $allegato->id_prestazione = $id;
-            $allegato->nome =$_POST['AllegatoDto']["nome"];
-            $allegato->url =$_POST['AllegatoDto']["url"] ;
-            $allegato->estensione =  pathinfo($allegato->url, PATHINFO_EXTENSION) ;
-            if(! $allegato->save())
-                echo ("error");
-            else{
-                $modelBase = $this->loadModel($id);
-                $model=new PrestazioneAllegati($modelBase);
-            }
-        }
 
 		$this->render('update',array(
 			'model'=>$model,
 		));
 	}
-
 
 	/**
 	 * Deletes a particular model.
@@ -153,11 +109,17 @@ class PrestazioneController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
+		if(Yii::app()->request->isPostRequest)
+		{
+			// we only allow deletion via POST request
+			$this->loadModel($id)->delete();
 
-		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!isset($_GET['ajax']))
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+			if(!isset($_GET['ajax']))
+				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+		}
+		else
+			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
 	}
 
 	/**
@@ -165,7 +127,7 @@ class PrestazioneController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Prestazione');
+		$dataProvider=new CActiveDataProvider('FondoPrestazione');
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -176,10 +138,10 @@ class PrestazioneController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new Prestazione('search');
+		$model=new FondoPrestazione('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['Prestazione']))
-			$model->attributes=$_GET['Prestazione'];
+		if(isset($_GET['FondoPrestazione']))
+			$model->attributes=$_GET['FondoPrestazione'];
 
 		$this->render('admin',array(
 			'model'=>$model,
@@ -189,13 +151,11 @@ class PrestazioneController extends Controller
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
-	 * @param integer $id the ID of the model to be loaded
-	 * @return Prestazione the loaded model
-	 * @throws CHttpException
+	 * @param integer the ID of the model to be loaded
 	 */
 	public function loadModel($id)
 	{
-		$model=Prestazione::model()->findByPk($id);
+		$model=FondoPrestazione::model()->findByPk((int)$id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
@@ -203,11 +163,11 @@ class PrestazioneController extends Controller
 
 	/**
 	 * Performs the AJAX validation.
-	 * @param Prestazione $model the model to be validated
+	 * @param CModel the model to be validated
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='prestazione-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='fondo-prestazione-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();

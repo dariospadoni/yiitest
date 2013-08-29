@@ -17,12 +17,14 @@ $this->menu=array(
 ?>
 
 
+
 <?php $this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,
 	'attributes'=>array(
 		'id_prestazione',
 		'nome',
-		'codice',
-		'descrizione',
+        'codice',
+        'prezzo',
+		'descrizione:html',
 	),
 )); ?>

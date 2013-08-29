@@ -17,8 +17,9 @@ $this->menu=array(
 ?>
 
 <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
-    <li class="active"><a  data-toggle="tab" href="#pane1">Dati</a></li>
+    <li class="active"><a data-toggle="tab" href="#pane1">Dati</a></li>
     <li><a data-toggle="tab"  href="#pane2">Allegati</a></li>
+    <li><a data-toggle="tab"  href="#pane3">Fondi</a></li>
 </ul>
 
 <div class="tab-content">
@@ -27,9 +28,9 @@ $this->menu=array(
         <?php $this->renderPartial('_form', array('model'=>$model)); ?>
     </div>
 
-    <div id="pane2" class="tab-pane active">
+    <div id="pane2" class="tab-pane">
     <?php
-            $this->widget('zii.widgets.grid.CGridView', array(
+        $this->widget('zii.widgets.grid.CGridView', array(
         'id'=>'allegati-grid',
         'dataProvider'=> new CArrayDataProvider($model->allegati,array(
             'keyField'=>'id_allegato_prestazione'
@@ -56,6 +57,20 @@ $this->menu=array(
             $this->renderPartial('_allegatoCreate',array('model'=> new AllegatoDto($model->id_prestazione )));
     ?>
     </div>
+
+    <div id="pane3" class="tab-pane">
+        <?php
+
+//
+//            $dataProvider=new CArrayDataProvider ($model->fondi,array(
+//                'keyField'=>'id_fondo_prestazione',
+//            ));
+
+
+        $this->renderPartial('_fondi',array('model'=> $model->fondi ));
+        ?>
+    </div>
+
 </div>
 
 
@@ -64,7 +79,7 @@ $this->menu=array(
 
 
 <script type="text/javascript">
-    jQuery(document).ready(function ($) {
+    $(document).ready(function () {
         $('#tabs').tab();
     });
 </script>

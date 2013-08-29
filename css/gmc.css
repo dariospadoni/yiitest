@@ -1,0 +1,5 @@
+.form-horizontal .control-group {margin-bottom:3px;}
+.form-horizontal .control-label { text-align: left; width:90px;}
+.span2 {width:160px;}
+[class*="span"] {margin-left:0px;}
+input, textarea { width:auto; }
