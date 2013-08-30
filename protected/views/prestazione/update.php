@@ -59,27 +59,60 @@ $this->menu=array(
     </div>
 
     <div id="pane3" class="tab-pane">
+        <div id="div-fondi">
         <?php
-
-//
-//            $dataProvider=new CArrayDataProvider ($model->fondi,array(
-//                'keyField'=>'id_fondo_prestazione',
-//            ));
-
-
-        $this->renderPartial('_fondi',array('model'=> $model->fondi ));
+            $this->renderPartial('_fondi',array('model'=>$model));
         ?>
+        </div>
     </div>
 
 </div>
 
 
-
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#tabs').tab();
+        $("#btn-associa-fondo").toggle ($("#FondoPrestazione_id_fondo option").length>0 );
+    });
+</script>
 
 
 
 <script type="text/javascript">
-    $(document).ready(function () {
-        $('#tabs').tab();
-    });
+
+
+    function updateFondiAssociati(id_prest)
+    {
+        $("#fondo-prestazione-grid").remove();
+        $("#div-fondi").load(
+            "<?php echo $this->createUrl('grigliaFondi'); ?>",
+            {id_prestazione: id_prest},
+            function (){
+                $("#btn-associa-fondo").toggle ($("#FondoPrestazione_id_fondo option").length>0 );
+            }
+        );
+    }
+
+    function successCallback(result)
+    {
+        if(result=="true") {
+            updateFondiAssociati (<?php echo $model->id_prestazione; ?>);
+        }
+        else alert(result);
+    }
+
+
+    function doSubmit (form, data, hasError){
+        if (!hasError){
+            console.log("Hide modal");
+            $(".modal-backdrop").remove();
+            $("#nuovo-fondo-prestazione-dialog").modal("hide");
+            $.post(
+                "<?php echo $this->createUrl('addFondo'); ?>",
+                $("#nuovo-fondo-prestazione-form").serialize() ,
+                successCallback)
+            return false;
+        }
+    };
+
 </script>

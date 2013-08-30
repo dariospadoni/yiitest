@@ -12,7 +12,8 @@ Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl.'/js/j
 
 $this->widget('zii.widgets.grid.CGridView', array(
     'id'=>'fondo-prestazione-grid',
-    'dataProvider'=>$model,
+    'dataProvider'=>$model->fondiPrestazione,
+    'ajaxVar'=>'id_prestazione',
     //'filter'=>$model,
     'cssFile'=>Yii::app()->getAssetManager()->publish(Yii::getPathOfAlias('ext.bootstrap-theme.widgets.assets')).'/gridview/styles.css',
     'itemsCssClass'=>'zebra-striped',
@@ -28,18 +29,54 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'name' => 'Prezzo'
         ),
 
-        array(
+//        array(
+//            'class'=>'CButtonColumn',
+//            'template'=>'{delete}{status}',
+//            'deleteButtonUrl'=>'Yii::app()->createUrl("prestazione/deleteFondo", array("id"=>$data->id_fondo_prestazione))',
+//            'deleteConfirmation'=>'Sei sicuro di voler eliminare questa associazione?',
+//            'afterDelete'=> 'function() { updateFondiAssociati('.$model->id_prestazione.'); return false;}',
+//
+//            array(
+//                'class'=>'CButtonColumn',
+//                'template' => '{view}{update}{status}{delete}',  //include the standard buttons plus the new status button
+//
+//            ),
+
+        array
+        (
             'class'=>'CButtonColumn',
-            'template'=>'{delete}',
-            'deleteButtonUrl'=>'Yii::app()->createUrl("prestazione/deleteFondo", array("id"=>$data->id_fondo_prestazione))',
+            'template'=>'{email}',
+            'buttons'=>array
+            (
+                'email' => array
+                (
+                    'label'=>'Send an e-mail to this user',
+                    'imageUrl'=>Yii::app()->request->baseUrl.'/images/user.jpg',
+                    'click'=>"function(){
+                                    $.ajax({
+                                        url:$(this).attr('href'),
+                                        type:'GET',
+                                        success:function(data) {
+                                            updateFondiAssociati('$model->id_prestazione');
+                                        }
+                                    });
+                                    return false;
+                              }
+                     ",
+                    'url'=>'Yii::app()->controller->createUrl("deleteFondo",array("id"=>$data->id_fondo_prestazione))',
+                ),
+            )
+        )
+//    ),
+)));?>
 
-        ),
-    ),
-)); ?>
+    <button id="btn-associa-fondo" href="#nuovo-fondo-prestazione-dialog" role="button" data-toggle="modal" class="btn btn-primary" >Aggiungi fondo</button>
 
+    <?php
+        $this->renderPartial('_nuovoFondo',array('model'=> $model ));
+    ?>
 
 <?php
-
 
 //http://help.discretelogix.com/php/yii/enable-in-place-editing-in-yii-grid.htm
 Yii::app()->clientScript->registerScript('status','

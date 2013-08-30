@@ -57,6 +57,10 @@
     </div>
 
     <div class="row">
+        <?php
+            if ($model->isNewRecord==false)
+                echo $form->hiddenField($model,'id_prestazione');
+        ?>
 		<?php echo BHtml::submitButton($model->isNewRecord ? 'Crea' : 'Salva'); ?>
 	</div>
 

@@ -38,7 +38,7 @@ class PrestazioneController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete','AggiornaPrezzo','deleteFondo'),
+				'actions'=>array('admin','delete','AggiornaPrezzo','deleteFondo','addFondo','nuovoFondo','grigliaFondi'),
 				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
@@ -47,13 +47,57 @@ class PrestazioneController extends Controller
 		);
 	}
 
+    public function actionGrigliaFondi(){
+        if(!$this->isNullOrEmpty($_POST["id_prestazione"]))
+        {
+            $modelBase = $this->loadModel($_POST["id_prestazione"]);
+            $model=new PrestazioneAllegati($modelBase);
+            $this->renderPartial('_fondi',array(
+                'model'=>$model,
+            ), false,true);
+        }
+    }
+
+    public function actionNuovoFondo ( )
+    {
+        if(!$this->isNullOrEmpty($_POST["id_prestazione"]))
+        {
+            $modelBase = $this->loadModel($_POST["id_prestazione"]);
+            $model=new PrestazioneAllegati($modelBase);
+            $this->renderPartial('_nuovoFondo',array(
+                'model'=>$model,
+            ), false,true);
+        }
+    }
+    //associo un nuovo fondo alla prestazione
+    public function actionAddFondo ()
+    {
+        if (isset($_POST["PrestazioneAllegati"]["id_prestazione"]) &&
+            isset($_POST["FondoPrestazione"]["id_fondo"]) &&
+            isset($_POST["PrestazioneAllegati"]["prezzo"]) )
+        {
+            $fondoPrestazione = new FondoPrestazione();
+            $fondoPrestazione->id_fondo = $_POST["FondoPrestazione"]["id_fondo"];
+            $fondoPrestazione->id_prestazione = $_POST["PrestazioneAllegati"]["id_prestazione"];
+            $fondoPrestazione->prezzo = $_POST["PrestazioneAllegati"]["prezzo"];
+
+            if ( !$fondoPrestazione->save())
+               echo ("Impossibile salvare il fondo-prestazione");
+            else
+                echo "true";
+        }
+    }
+
     //elimina associazione fondo-prestazione corrente
     public function actionDeleteFondo($id){
+    //    $id = $_POST["id"];
         if (!$this->isNullOrEmpty($id))
         {
             $fondoPrestazione = FondoPrestazione::model()->findByPk($id);
             $fondoPrestazione->delete();
+            echo "1";
         }
+
     }
 
     public function actionAggiornaPrezzo(){
@@ -116,15 +160,23 @@ class PrestazioneController extends Controller
 		$model=new PrestazioneAllegati($modelBase);
 
 		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+	    $this->performAjaxValidation($model);
 
+        //caso create
 		if(isset($_POST['Prestazione']))
 		{
 			$model->attributes=$_POST['Prestazione'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id_prestazione));
 		}
-
+        //caso update
+        if (isset($_POST["PrestazioneAllegati"]))
+        {
+            $prestazione = Prestazione::model()->findByPk( $_POST['PrestazioneAllegati']["id_prestazione"]);
+            $prestazione->attributes=$_POST['PrestazioneAllegati'];
+            if($prestazione->save())
+                $this->redirect(array('update','id'=>$model->id_prestazione));
+        }
         if(isset($_POST['AllegatoDto']))
         {
             $allegato = new AllegatoPrestazione();
@@ -139,6 +191,7 @@ class PrestazioneController extends Controller
                 $model=new PrestazioneAllegati($modelBase);
             }
         }
+
 
 		$this->render('update',array(
 			'model'=>$model,

@@ -15,7 +15,8 @@ class PrestazioneAllegati extends CFormModel {
     public $descrizione;
     public $prezzo;
 
-    public $fondi = array();
+    public $fondiPrestazione = array();
+    public $fondiDisponibili = array();
     public $allegati = array();
     public $isNewRecord = false;
 
@@ -31,41 +32,32 @@ class PrestazioneAllegati extends CFormModel {
         $allegatoPrestazione = new AllegatoPrestazione();
         $allegatiPrestazione = $allegatoPrestazione::model()->findAll('id_prestazione=:id_prestazione',
                                                                     array(':id_prestazione'=>$this->id_prestazione));
-     //   $fondo = new FondoPrestazione();
-//        $fondi = $fondo::model()->findAll('id_prestazione=:id_prestazione',
-//                                                                    array(':id_prestazione'=>$this->id_prestazione));
-/*
-        $fondi = new CActiveDataProvider("gmc_fondo_prestazione", array(
-            'criteria' => array(
-                'select' => array(
-                    'fp.*',
-                    'f.nome  AS nomeFondo',
-                    'p.nome  AS nomePrestazione'
-                ),
-                'join' => 'JOIN gmc_fondo as f ON f.id_fondo = fp.id_fondo',
-                'join' => 'JOIN gmc_prestazione as p ON p.id_prestazione= fp.id_prestazione',
-            )
-        ));
-*/
+
+
+        //fondi associati alla prestazione
         $criteria = new CDbCriteria();
         $criteria -> select = 't.*,p.nome as nomePrestazione,f.nome as nomeFondo';
         $criteria -> join = 'INNER JOIN gmc_fondo f on f.id_fondo = t.id_fondo ';
         $criteria -> join .= 'INNER JOIN gmc_prestazione p on p.id_prestazione = t.id_prestazione';
         $criteria -> condition = 'p.id_prestazione = :id_prestazione';
         $criteria -> params = array(':id_prestazione' => $this->id_prestazione);
-        $fondi = new CActiveDataProvider( 'FondoPrestazione',array(
+        $fondiPrestazione = new CActiveDataProvider( 'FondoPrestazione',array(
             'criteria' => $criteria
         ));
+        $this->fondiPrestazione = $fondiPrestazione;
 
-        $this->fondi = $fondi;
+        //fondi disponibili (tutti meno quelli già associati)
+        $criteria = new CDbCriteria();
+        $criteria -> select = 't.*';
+        $criteria -> condition = 't.id_fondo not in (select id_fondo from gmc_fondo_prestazione fp where fp.id_prestazione=:id_prestazione)';
+        $criteria -> params = array(':id_prestazione' => $this->id_prestazione);
+        $fondiDisponibili = Fondo::model()->findAll( $criteria );
+        $this->fondiDisponibili = $fondiDisponibili;
 
         if (isset ($allegatiPrestazione))
             foreach ($allegatiPrestazione as $item)
                 array_push( $this->allegati, $item);
-//
-//        if (isset ($fondi))
-//            foreach ($fondi as $item)
-//                array_push( $this->fondi, $item);
+
     }
 
 
@@ -73,7 +65,8 @@ class PrestazioneAllegati extends CFormModel {
     {
 
         return array(
-            array('nome, descrizione', 'required' ),
+            array('nome, descrizione, prezzo', 'required' ),
+            array('prezzo','numerical'),
             array('nome', 'length', 'max'=>200),
             array('codice', 'length', 'max'=>20),
         );
@@ -86,6 +79,7 @@ class PrestazioneAllegati extends CFormModel {
             'nome' => 'Nome',
             'codice' => 'Codice',
             'descrizione' => 'Descrizione',
+            'prezzo'=>'Prezzo'
         );
     }
 
