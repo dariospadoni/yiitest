@@ -8,9 +8,7 @@
         'id'=>'nuovo-fondo-prestazione-form',
         'enableAjaxValidation'=>false,
         'enableClientValidation'=>true,
-        //'validationUrl'=> CHtml::normalizeUrl(array('prestazione/addFondo')),
-       // 'action'=>Yii::app()->createUrl('prestazione/update&id=1'),
-        'clientOptions'=>array('validateOnSubmit'=>true,'validateOnChange'=>true,'afterValidate'=> 'js:doSubmit' )
+        'clientOptions'=>array('validateOnSubmit'=>true,'validateOnChange'=>true,'afterValidate'=> 'js:submitNuovoFondo' )
     )); ?>
 
     <div class="modal-header">

@@ -80,29 +80,30 @@ $this->menu=array(
 
 <script type="text/javascript">
 
-
-    function updateFondiAssociati(id_prest)
-    {
-        $("#fondo-prestazione-grid").remove();
-        $("#div-fondi").load(
-            "<?php echo $this->createUrl('grigliaFondi'); ?>",
-            {id_prestazione: id_prest},
-            function (){
-                $("#btn-associa-fondo").toggle ($("#FondoPrestazione_id_fondo option").length>0 );
+    function updateComboFondiDisponibili (id_prest){
+        $.ajax({
+            type:'POST',
+            url: "<?php echo $this->createUrl('fondiDisponibili'); ?>",
+            dataType:'json',
+            data: {id_prestazione:id_prest},
+            success: function(data){
+                $("#FondoPrestazione_id_fondo").empty().html(data);
             }
-        );
+        });
+
     }
 
-    function successCallback(result)
+    function nuovoFondoSuccessCallback(result)
     {
         if(result=="true") {
-            updateFondiAssociati (<?php echo $model->id_prestazione; ?>);
+            $.fn.yiiGridView.update("fondo-prestazione-grid");
+            updateComboFondiDisponibili(<?php echo $model->id_prestazione; ?>);
         }
         else alert(result);
     }
 
 
-    function doSubmit (form, data, hasError){
+    function submitNuovoFondo (form, data, hasError){
         if (!hasError){
             console.log("Hide modal");
             $(".modal-backdrop").remove();
@@ -110,7 +111,7 @@ $this->menu=array(
             $.post(
                 "<?php echo $this->createUrl('addFondo'); ?>",
                 $("#nuovo-fondo-prestazione-form").serialize() ,
-                successCallback)
+                nuovoFondoSuccessCallback)
             return false;
         }
     };

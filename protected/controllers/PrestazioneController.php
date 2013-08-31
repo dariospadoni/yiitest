@@ -38,7 +38,7 @@ class PrestazioneController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete','AggiornaPrezzo','deleteFondo','addFondo','nuovoFondo','grigliaFondi'),
+				'actions'=>array('admin','delete','AggiornaPrezzo','deleteFondo','addFondo','nuovoFondo','fondiDisponibili'),
 				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
@@ -47,16 +47,26 @@ class PrestazioneController extends Controller
 		);
 	}
 
-    public function actionGrigliaFondi(){
-        if(!$this->isNullOrEmpty($_POST["id_prestazione"]))
+
+    public function actionFondiDisponibili()
+    {
+        $id=$_POST["id_prestazione"];
+        $modelBase = $this->loadModel($id);
+        $model=new PrestazioneAllegati($modelBase);
+
+        $data=CHtml::listData($model->fondiDisponibili,'id_fondo', 'nome');
+        $res="";
+        foreach($data as $value=>$name)
         {
-            $modelBase = $this->loadModel($_POST["id_prestazione"]);
-            $model=new PrestazioneAllegati($modelBase);
-            $this->renderPartial('_fondi',array(
-                'model'=>$model,
-            ), false,true);
+            $res = $res. CHtml::tag('option',
+                array('value'=>$value),CHtml::encode($name),true);
         }
+
+        echo json_encode($res);
+        //echo "{success:true, data:'".$res."'}";
+
     }
+
 
     public function actionNuovoFondo ( )
     {
