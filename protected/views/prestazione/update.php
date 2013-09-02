@@ -70,15 +70,12 @@ $this->menu=array(
 
 
 <script type="text/javascript">
+
     $(document).ready(function () {
         $('#tabs').tab();
         $("#btn-associa-fondo").toggle ($("#FondoPrestazione_id_fondo option").length>0 );
     });
-</script>
 
-
-
-<script type="text/javascript">
 
     function updateComboFondiDisponibili (id_prest){
         $.ajax({
@@ -88,6 +85,7 @@ $this->menu=array(
             data: {id_prestazione:id_prest},
             success: function(data){
                 $("#FondoPrestazione_id_fondo").empty().html(data);
+                $("#btn-associa-fondo").toggle ($("#FondoPrestazione_id_fondo option").length>0 );
             }
         });
 

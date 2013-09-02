@@ -17,6 +17,65 @@ class FondoController extends Controller
 			'accessControl', // perform access control for CRUD operations
 		);
 	}
+    public function actionPrestazioniNonAssociate(){
+        $res = new JsonResult();
+        if(!$this->IsNullOrEmpty($_POST["id_fondo"]))
+        {
+            $model = $this->loadModel($_POST["id_fondo"]);
+            $data=CHtml::listData($model->prestazioniNonAssociate,'id_prestazione', 'nome');
+            $options="";
+            foreach($data as $value=>$name)
+            {
+                $options = $options. CHtml::tag('option',
+                        array('value'=>$value),CHtml::encode($name),true);
+            }
+            $res->success = true;
+            $res->data = $options;
+        }
+        echo json_encode($res);
+    }
+
+    public function actionAssociaPrestazione(){
+        $res = new JsonResult();
+        if (isset($_POST["FondoPrestazione"]["id_prestazione"]) &&
+            isset($_POST["Fondo"]["id_fondo"]) &&
+            isset($_POST["FondoPrestazione"]["prezzo"]) )
+        {
+            $fondoPrestazione = new FondoPrestazione();
+            $fondoPrestazione->id_fondo = $_POST["Fondo"]["id_fondo"];
+            $fondoPrestazione->id_prestazione = $_POST["FondoPrestazione"]["id_prestazione"];
+            $fondoPrestazione->prezzo = $_POST["FondoPrestazione"]["prezzo"];
+
+            if ( !$fondoPrestazione->save())
+            {
+                $res->msg = "Impossibile salvare il fondo-prestazione";
+                $res->success =false;
+            }
+            else
+            {
+                $res->success =true;
+            }
+            echo json_encode($res);
+        }
+    }
+
+    public function actionDisassociaPrestazione($id){
+        $res = new JsonResult();
+        if (!$this->isNullOrEmpty($id))
+        {
+            $fondoPrestazione = FondoPrestazione::model()->findByPk($id);
+            if( $fondoPrestazione->delete())
+            {
+                $res->success=true;
+            }
+            else
+            {
+                $res->success=false;
+            }
+            echo json_encode($res);
+        }
+    }
+
 
 	/**
 	 * Specifies the access control rules.
@@ -35,7 +94,7 @@ class FondoController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
+				'actions'=>array('admin','delete','disassociaPrestazione','associaPrestazione','prestazioniNonAssociate'),
 				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
@@ -123,6 +182,8 @@ class FondoController extends Controller
 			'model'=>$model,
 		));
 	}
+
+
 
 	/**
 	 * Deletes a particular model.

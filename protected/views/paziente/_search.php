@@ -23,7 +23,7 @@
 	<div class="clearfix">
 		<?php echo $form->label($model,'cognome'); ?>
 		<div class="input">
-			<?php echo $form->textField($model,'cognome',array('size'=>60,'maxlength'=>100)); ?>
+			<?php echo $form->textField($model,'cognome',array('size'=>20,'maxlength'=>100)); ?>
 		</div>
 	</div>
 

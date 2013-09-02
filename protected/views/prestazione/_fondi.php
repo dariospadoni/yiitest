@@ -2,13 +2,14 @@
 Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.jeditable.mini.js');
 ?>
 
-<script src="http://www.appelsiini.net/download/jquery.jeditable.mini.js" type="text/javascript"></script>
+<!--<script src="http://www.appelsiini.net/download/jquery.jeditable.mini.js" type="text/javascript"></script>-->
 <style>
     table{width:100%;}
     th { color:#08c; text-align:left;}
 </style>
 
 <?php
+
 
 $this->widget('zii.widgets.grid.CGridView', array(
     'id'=>'fondo-prestazione-grid',

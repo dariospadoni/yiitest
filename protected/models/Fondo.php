@@ -12,6 +12,22 @@
  */
 class Fondo extends CActiveRecord
 {
+
+    public $prestazioniAssociate ;
+    public $prestazioniNonAssociate = array();
+
+
+    public function afterFind(){
+        parent::afterFind();
+        if( !$this->isNewRecord()){
+            $this->GetPrestazioniAssociate();
+            $this->GetPrestazioniNonAssociate();
+        }
+        else{
+            $this->prestazioniAssociate = new CActiveDataProvider( 'FondoPrestazione');
+        }
+    }
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -114,4 +130,26 @@ class Fondo extends CActiveRecord
         return ! isSet ($this->id_fondo );
     }
 
+    public function GetPrestazioniNonAssociate(){
+        $criteria = new CDbCriteria();
+        $criteria -> select = 't.*';
+        $criteria -> condition = 't.id_prestazione not in (select id_prestazione from gmc_fondo_prestazione fp where fp.id_fondo=:id_fondo)';
+        $criteria -> params = array(':id_fondo' => $this->id_fondo);
+        $this->prestazioniNonAssociate = Prestazione::model()->findAll( $criteria );
+    }
+
+
+    public function GetPrestazioniAssociate()
+    {
+        $criteria = new CDbCriteria();
+        $criteria -> select = 't.*,p.nome as nomePrestazione,p.codice as codicePrestazione ';
+        $criteria -> join = 'INNER JOIN gmc_prestazione p on p.id_prestazione = t.id_prestazione ';
+        $criteria -> join .= 'INNER JOIN gmc_fondo f on f.id_fondo = t.id_fondo ';
+        $criteria -> condition = 't.id_fondo= :id_fondo';
+        $criteria -> params = array(':id_fondo' => $this->id_fondo);
+        $this->prestazioniAssociate = new CActiveDataProvider( 'FondoPrestazione',array(
+            'criteria' => $criteria
+        ));
+
+    }
 }

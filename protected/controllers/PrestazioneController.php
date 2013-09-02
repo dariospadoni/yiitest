@@ -63,8 +63,6 @@ class PrestazioneController extends Controller
         }
 
         echo json_encode($res);
-        //echo "{success:true, data:'".$res."'}";
-
     }
 
 
@@ -100,7 +98,7 @@ class PrestazioneController extends Controller
 
     //elimina associazione fondo-prestazione corrente
     public function actionDeleteFondo($id){
-    //    $id = $_POST["id"];
+
         if (!$this->isNullOrEmpty($id))
         {
             $fondoPrestazione = FondoPrestazione::model()->findByPk($id);

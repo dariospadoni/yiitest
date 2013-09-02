@@ -18,6 +18,7 @@ class FondoPrestazione extends CActiveRecord
 
     public $nomeFondo;
     public $nomePrestazione;
+    public $codicePrestazione;
     public $prezzoPrestazioneNoFondo;
 
 	/**
