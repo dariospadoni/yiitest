@@ -68,6 +68,7 @@ class FondoPrestazione extends CActiveRecord
 			'id_fondo' => 'Id Fondo',
 			'id_prestazione' => 'Id Prestazione',
 			'prezzo' => 'Prezzo',
+            'nomeFondo'=>"Nome Fondo",
 		);
 	}
 

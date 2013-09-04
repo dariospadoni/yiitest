@@ -18,6 +18,24 @@ class PrenotazioneController extends Controller
 		);
 	}
 
+    public function actionPrestazioniAssociate($idFondo){
+        $res = new JsonResult();
+        if(!$this->IsNullOrEmpty($idFondo))
+        {
+            $model = Fondo::model()->findByPk($idFondo);
+            $data=CHtml::listData($model->prestazioniAssociate,'id_prestazione', 'nome');
+            $options="";
+            foreach($data as $value=>$name)
+            {
+                $options = $options. CHtml::tag('option',
+                        array('value'=>$value),CHtml::encode($name),true);
+            }
+            $res->success = true;
+            $res->data = $options;
+        }
+        echo json_encode($res);
+    }
+
 	/**
 	 * Specifies the access control rules.
 	 * This method is used by the 'accessControl' filter.
@@ -27,7 +45,7 @@ class PrenotazioneController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
+				'actions'=>array('index','view','prestazioniAssociate','stepOne'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -55,28 +73,67 @@ class PrenotazioneController extends Controller
 		));
 	}
 
-	/**
-	 * Creates a new model.
-	 * If creation is successful, the browser will be redirected to the 'view' page.
-	 */
-	public function actionCreate()
-	{
-		$model=new Prenotazione;
+    private function GetPrestazioniAssociate($idFondo){
+        $criteria = new CDbCriteria();
+        $criteria -> select = 't.*,p.nome as nomePrestazione,p.codice as codicePrestazione ';
+        $criteria -> join = 'INNER JOIN gmc_prestazione p on p.id_prestazione = t.id_prestazione ';
+        $criteria -> join .= 'INNER JOIN gmc_fondo f on f.id_fondo = t.id_fondo ';
+        $criteria -> condition = 't.id_fondo= :id_fondo';
+        $criteria -> params = array(':id_fondo' => $idFondo);
+        return FondoPrestazione::model()->findAll($criteria);
+    }
 
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+    public function actionCreate()
+    {
+        $model =  isset($_SESSION["prenotazione"]) ? $_SESSION["prenotazione"] : new Prenotazione();
+        $step=1;
+        $prestazioni = null;
 
-		if(isset($_POST['Prenotazione']))
-		{
-			$model->attributes=$_POST['Prenotazione'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id_prenotazione));
-		}
+        $this->performAjaxValidation($model);
+        $this->performAjaxValidation(new Paziente());
 
-		$this->render('create',array(
-			'model'=>$model,
-		));
-	}
+        if( isset($_POST["Prenotazione"]["id_fondo"]))
+        {
+            $model->id_fondo = $_POST["Prenotazione"]["id_fondo"];
+            $prestazioni = $this->GetPrestazioniAssociate($model->id_fondo);
+            $_SESSION["prenotazione"] = $model;
+            $step = 2;
+        }
+
+        if( isset($_POST["Prenotazione"]["id_prestazione"]))
+        {
+            $model->id_prestazione = $_POST["Prenotazione"]["id_prestazione"];
+            $_SESSION["prenotazione"] = $model;
+            $step = 3;
+        }
+
+        if( isset($_POST["Paziente"]))
+        {
+            $_SESSION["paziente"] = $_POST["Paziente"];
+            $step = 4;
+        }
+
+        if(isset($_POST["confirm"]))
+        {
+            //todo: qui salvataggio prenotazione
+            unset($_SESSION['prenotazione']);
+            unset($_SESSION['paziente']);
+
+        }
+
+
+        $this->layout="column1";
+        $this->render('create',array(
+            'model'=>$model,
+            'step'=>$step,
+            'prestazioni' =>$prestazioni,
+            'fondi'=>Fondo::model()->findAll()
+        ));
+    }
+
+
+
+
 
 	/**
 	 * Updates a particular model.
@@ -172,5 +229,12 @@ class PrenotazioneController extends Controller
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
+        if(isset($_POST['ajax']) && $_POST['ajax']==='paziente-form')
+        {
+            $paziente = new Paziente;
+            $paziente->attributes = $_POST['Paziente'];
+            echo CActiveForm::validate($paziente);
+            Yii::app()->end();
+        }
 	}
 }

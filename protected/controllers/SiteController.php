@@ -99,6 +99,24 @@ class SiteController extends Controller
 		$this->render('login',array('model'=>$model));
 	}
 
+
+    public function actionSuggestComuni() {
+        $criteria = new CDbCriteria;
+        $criteria->select = array('city_code_land', 'city_name');
+        $criteria->addSearchCondition('city_name', $_GET['term']);
+        $criteria->limit = 10;
+        $data = Cities::model()->findAll($criteria);
+        $arr = array();
+        foreach ($data as $item) {
+            $arr[] = array(
+                'value' => $item->city_code_land,
+                'label' => $item->city_name,
+            );
+        }
+        echo CJSON::encode($arr);
+    }
+
+
 	/**
 	 * Logs out the current user and redirect to homepage.
 	 */

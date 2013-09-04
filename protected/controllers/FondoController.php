@@ -17,6 +17,7 @@ class FondoController extends Controller
 			'accessControl', // perform access control for CRUD operations
 		);
 	}
+
     public function actionPrestazioniNonAssociate(){
         $res = new JsonResult();
         if(!$this->IsNullOrEmpty($_POST["id_fondo"]))

@@ -20,7 +20,9 @@ class Fondo extends CActiveRecord
     public function afterFind(){
         parent::afterFind();
         if( !$this->isNewRecord()){
+
             $this->GetPrestazioniAssociate();
+
             $this->GetPrestazioniNonAssociate();
         }
         else{

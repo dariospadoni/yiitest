@@ -8,7 +8,8 @@
  * @property string $cf
  * @property string $codice_sanitario
  * @property string $nome
- * @property string $cognome
+ * @property string $note
+ * @property string $sesso
  * @property string $data_nascita
  * @property string $citta_nascita
  * @property string $indirizzo
@@ -17,7 +18,6 @@
  * @property string $cap
  * @property string $telefono
  * @property string $email
- * @property string $note
  */
 class Paziente extends CActiveRecord
 {
@@ -37,7 +37,7 @@ class Paziente extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('cf, nome, cognome, telefono', 'required'),
+			array('cf, nome, cognome, telefono, sesso', 'required'),
 			array('cf', 'length', 'max'=>16),
 			array('codice_sanitario', 'length', 'max'=>20),
 			array('nome, cognome, citta_nascita, citta, email', 'length', 'max'=>100),
@@ -70,6 +70,7 @@ class Paziente extends CActiveRecord
 	{
 		return array(
 			'id_paziente' => 'Id Paziente',
+            'sesso'=>'Sesso',
 			'cf' => 'Codice fiscale',
 			'codice_sanitario' => 'Codice sanitario',
             'nome' => 'Nome',
@@ -106,6 +107,7 @@ class Paziente extends CActiveRecord
 
 		$criteria->compare('id_paziente',$this->id_paziente);
 		$criteria->compare('cf',$this->cf,true);
+        $criteria->compare('sesso',$this->sesso,true);
 		$criteria->compare('codice_sanitario',$this->codice_sanitario,true);
 		$criteria->compare('nome',$this->nome,true);
 		$criteria->compare('cognome',$this->cognome,true);

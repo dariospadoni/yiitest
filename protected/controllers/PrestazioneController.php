@@ -70,20 +70,6 @@ class PrestazioneController extends Controller
         echo json_encode($res);
     }
 
-/*
-    public function actionAssociaFondo ( )
-    {
-        if(!$this->isNullOrEmpty($_POST["id_prestazione"]))
-        {
-            $modelBase = $this->loadModel($_POST["id_prestazione"]);
-            $model=new PrestazioneAllegati($modelBase);
-            $this->renderPartial('_nuovoFondo',array(
-                'model'=>$model,
-            ), false,true);
-        }
-    }
-
-*/
     //associo un nuovo fondo alla prestazione
     public function actionAssociaFondo ()
     {
