@@ -27,6 +27,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         (
             'class'=>'CButtonColumn',
             'template'=>'{delete}',
+            'deleteConfirmation'=>"Sei sicuro di voler eliminare l'associazione con questa prestazione?",
             'deleteButtonUrl'=>'Yii::app()->createUrl("fondo/disassociaPrestazione", array("id"=>$data->id_fondo_prestazione))',
             'afterDelete'=>'function(){updateComboPrestazioniNonAssociate('.$model->id_fondo.');}',
         )

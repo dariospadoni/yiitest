@@ -1,8 +1,5 @@
 <link  rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/jquery.fileupload-ui.css" />
-<link  rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/overcast/jquery-ui.min.css"/>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js" ></script>
-<script type="text/javascript" src="<?php echo Yii::app()->baseUrl; ?>/js/jquery-ui-i18n.js" > </script>
-<style>
+ <style>
     .form-horizontal .control-label { float:none; width:auto; text-align: left;}
     [class*="span"] { margin-left:0;}
     input,textarea { width:auto; }
@@ -44,7 +41,19 @@
         <div class="<?php echo $form->fieldClass($model, 'data_nascita'); ?> span2">
             <?php echo $form->labelEx($model,'data_nascita'); ?>
             <div class="input">
-                <?php echo $form->textField($model,'data_nascita',array('size'=>10,'maxlength'=>100)); ?>
+
+                <?php
+                $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                    'name'=>'data_nascita',
+                    'language' => 'it',
+                    'themeUrl'=>'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes',
+                    'theme'=>'overcast',
+                    'options'=>array(
+                        'showAnim'=>'fold',
+                    ),
+                ));
+                ?>
+
                 <?php echo $form->error($model,'data_nascita'); ?>
             </div>
         </div>
@@ -158,11 +167,3 @@
 
 </div><!-- form -->
 
-
-<script type="text/javascript">
-
-    $(function(){
-
-        $("#Paziente_data_nascita").datepicker();
-    }) ;
-</script>

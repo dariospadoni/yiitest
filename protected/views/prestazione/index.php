@@ -13,7 +13,19 @@ $this->menu=array(
 ?>
 
 
-<?php $this->widget('zii.widgets.CListView', array(
-	'dataProvider'=>$dataProvider,
-	'itemView'=>'_view',
+
+<?php $this->widget('zii.widgets.grid.CGridView', array(
+    'id'=>'prestazione-grid',
+    'dataProvider'=>$dataProvider,
+    //'filter'=>$model,
+    'columns'=>array(
+        'nome',
+        'codice',
+        'descrizione:html',
+        array(
+            'class'=>'CButtonColumn',
+            'deleteConfirmation'=>"Sei sicuro di voler eliminare questa prestazione?",
+        ),
+    ),
 )); ?>
+

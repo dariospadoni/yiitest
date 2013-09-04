@@ -31,7 +31,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
         (
             'class'=>'CButtonColumn',
             'template'=>'{delete}',
-            'deleteButtonUrl'=>'Yii::app()->createUrl("prestazione/deleteFondo", array("id"=>$data->id_fondo_prestazione))',
+            'deleteConfirmation'=>"Sei sicuro di voler eliminare l'associazione con questo fondo?",
+            'deleteButtonUrl'=>'Yii::app()->createUrl("prestazione/disassociaFondo", array("id"=>$data->id_fondo_prestazione))',
             'afterDelete'=>'function(){updateComboFondiDisponibili('.$model->id_prestazione.');}',
         )
     )

@@ -38,7 +38,7 @@ class PrestazioneController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete','AggiornaPrezzo','deleteFondo','addFondo','nuovoFondo','fondiDisponibili'),
+				'actions'=>array('admin','delete','AggiornaPrezzo','disassociaFondo','associaFondo','nuovoFondo','fondiDisponibili'),
 				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
@@ -50,23 +50,28 @@ class PrestazioneController extends Controller
 
     public function actionFondiDisponibili()
     {
-        $id=$_POST["id_prestazione"];
-        $modelBase = $this->loadModel($id);
-        $model=new PrestazioneAllegati($modelBase);
-
-        $data=CHtml::listData($model->fondiDisponibili,'id_fondo', 'nome');
-        $res="";
-        foreach($data as $value=>$name)
+        $res = new JsonResult();
+        if(!$this->IsNullOrEmpty($_POST["id_prestazione"]))
         {
-            $res = $res. CHtml::tag('option',
-                array('value'=>$value),CHtml::encode($name),true);
-        }
+            $id=$_POST["id_prestazione"];
+            $modelBase = $this->loadModel($id);
+            $model=new PrestazioneAllegati($modelBase);
 
+            $data=CHtml::listData($model->fondiDisponibili,'id_fondo', 'nome');
+            $options="";
+            foreach($data as $value=>$name)
+            {
+                $options = $options. CHtml::tag('option',
+                    array('value'=>$value),CHtml::encode($name),true);
+            }
+            $res->success = true;
+            $res->data = $options;
+        }
         echo json_encode($res);
     }
 
-
-    public function actionNuovoFondo ( )
+/*
+    public function actionAssociaFondo ( )
     {
         if(!$this->isNullOrEmpty($_POST["id_prestazione"]))
         {
@@ -77,9 +82,12 @@ class PrestazioneController extends Controller
             ), false,true);
         }
     }
+
+*/
     //associo un nuovo fondo alla prestazione
-    public function actionAddFondo ()
+    public function actionAssociaFondo ()
     {
+        $res = new JsonResult();
         if (isset($_POST["PrestazioneAllegati"]["id_prestazione"]) &&
             isset($_POST["FondoPrestazione"]["id_fondo"]) &&
             isset($_POST["PrestazioneAllegati"]["prezzo"]) )
@@ -90,20 +98,32 @@ class PrestazioneController extends Controller
             $fondoPrestazione->prezzo = $_POST["PrestazioneAllegati"]["prezzo"];
 
             if ( !$fondoPrestazione->save())
-               echo ("Impossibile salvare il fondo-prestazione");
+            {
+                $res->success=false;
+                $res->message ="Impossibile salvare il fondo-prestazione: " . $fondoPrestazione->getErrors();
+            }
             else
-                echo "true";
+                $res->success=true;
+            echo json_encode($res);
         }
     }
 
     //elimina associazione fondo-prestazione corrente
-    public function actionDeleteFondo($id){
-
+    public function actionDisassociaFondo($id){
+        $res = new JsonResult();
         if (!$this->isNullOrEmpty($id))
         {
             $fondoPrestazione = FondoPrestazione::model()->findByPk($id);
-            $fondoPrestazione->delete();
-            echo "1";
+            if( $fondoPrestazione->delete())
+            {
+                $res->success=true;
+            }
+            else
+            {
+                $res->message = $fondoPrestazione->getErrors();
+                $res->success=false;
+            }
+            echo json_encode($res);
         }
 
     }

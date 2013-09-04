@@ -11,6 +11,7 @@
 	<link href="<?php echo Yii::app()->theme->baseUrl; ?>/css/bootstrap.min.css" rel="stylesheet">
 	<link href="<?php echo Yii::app()->theme->baseUrl; ?>/css/application.min.css" rel="stylesheet">
     <link href="<?php echo Yii::app()->baseUrl;?>/css/gmc.css"  rel="stylesheet">
+
 <!--	<link href="--><?php //echo Yii::app()->theme->baseUrl; ?><!--/css/bootstrap-responsive.css" rel="stylesheet">-->
 
 	<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -25,6 +26,7 @@
 	<link rel="apple-touch-icon" sizes="114x114" href="<?php echo Yii::app()->request->baseUrl; ?>/images/apple-touch-icon-114x114.png">
 
 
+
 </head>
 
 <body>
@@ -34,7 +36,7 @@
 				<a class="brand" href="<?php echo $this->createAbsoluteUrl('//'); ?>"><?php echo CHtml::encode(Yii::app()->name); ?></a>
 				<?php $this->widget('zii.widgets.CMenu',array(
 					'items'=>array(
-						array('label'=>'Home', 'url'=>array('/site/index')),
+						array('label'=>'Prenotazioni', 'url'=>array('/prenotazione/index'),'visible'=> Yii::app()->user->isAdmin()),
 						array('label'=>'Pagine', 'url'=>array('/pagina/index'),'visible'=> Yii::app()->user->isAdmin()),
                         array('label'=>'Fondi', 'url'=>array('/fondo/index'),'visible'=> Yii::app()->user->isAdmin()),
 						array('label'=>'Prestazioni', 'url'=>array('/prestazione/index'),'visible'=> Yii::app()->user->isAdmin() ),
@@ -77,6 +79,12 @@
 <!--			--><?php //echo Yii::powered(); ?><!--</p>-->
 <!--		</div>-->
 <!--	</footer>-->
-	
+
+<script type="text/javascript">
+    $(function(){
+
+    });
+
+</script>
 </body>
 </html>

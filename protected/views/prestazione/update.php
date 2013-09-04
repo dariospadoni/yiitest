@@ -19,7 +19,7 @@ $this->menu=array(
 <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
     <li class="active"><a data-toggle="tab" href="#pane1">Dati</a></li>
     <li><a data-toggle="tab"  href="#pane2">Allegati</a></li>
-    <li><a data-toggle="tab"  href="#pane3">Fondi</a></li>
+    <li><a data-toggle="tab"  href="#pane3">Fondi associati</a></li>
 </ul>
 
 <div class="tab-content">
@@ -84,7 +84,7 @@ $this->menu=array(
             dataType:'json',
             data: {id_prestazione:id_prest},
             success: function(data){
-                $("#FondoPrestazione_id_fondo").empty().html(data);
+                $("#FondoPrestazione_id_fondo").empty().html(data.data);
                 $("#btn-associa-fondo").toggle ($("#FondoPrestazione_id_fondo option").length>0 );
             }
         });
@@ -93,11 +93,12 @@ $this->menu=array(
 
     function nuovoFondoSuccessCallback(result)
     {
-        if(result=="true") {
+        if(result.success==true) {
             $.fn.yiiGridView.update("fondo-prestazione-grid");
             updateComboFondiDisponibili(<?php echo $model->id_prestazione; ?>);
         }
-        else alert(result);
+        else
+            alert(result.message);
     }
 
 
@@ -107,9 +108,10 @@ $this->menu=array(
             $(".modal-backdrop").remove();
             $("#nuovo-fondo-prestazione-dialog").modal("hide");
             $.post(
-                "<?php echo $this->createUrl('addFondo'); ?>",
+                "<?php echo $this->createUrl('associaFondo'); ?>",
                 $("#nuovo-fondo-prestazione-form").serialize() ,
-                nuovoFondoSuccessCallback)
+                nuovoFondoSuccessCallback,
+                'json')
             return false;
         }
     };
