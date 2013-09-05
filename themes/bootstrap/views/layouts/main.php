@@ -1,18 +1,16 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html lang="it" xmlns="http://www.w3.org/1999/html">
 <head>
 	<meta charset="utf-8">
 	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="description" content="">
-	<meta name="author" content="">
+	<meta name="description" content="Sito web del Gemelli Medical Center">
+	<meta name="author" content="Witbit Ingegneria Informatica - www.witbit.it">
 
 	<!-- Le styles -->
 	<link href="<?php echo Yii::app()->theme->baseUrl; ?>/css/bootstrap.min.css" rel="stylesheet">
 	<link href="<?php echo Yii::app()->theme->baseUrl; ?>/css/application.min.css" rel="stylesheet">
     <link href="<?php echo Yii::app()->baseUrl;?>/css/gmc.css"  rel="stylesheet">
-
-<!--	<link href="--><?php //echo Yii::app()->theme->baseUrl; ?><!--/css/bootstrap-responsive.css" rel="stylesheet">-->
 
 	<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 	<!--[if lt IE 9]>
@@ -25,7 +23,7 @@
 	<link rel="apple-touch-icon" sizes="72x72" href="<?php echo Yii::app()->request->baseUrl; ?>/images/apple-touch-icon-72x72.png">
 	<link rel="apple-touch-icon" sizes="114x114" href="<?php echo Yii::app()->request->baseUrl; ?>/images/apple-touch-icon-114x114.png">
 
-
+    <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/utils.js" ></script>
 
 </head>
 
@@ -65,6 +63,7 @@
 	<?php if(isset($this->breadcrumbs)):?>
 		<?php $this->widget('BBreadcrumbs', array(
 			'links'=>$this->breadcrumbs,
+			'homeLink'=> isset($this->breadcrumbsOptionsHomeLink) ? $this->breadcrumbsOptionsHomeLink :null,
 			'separator'=>' / ',
 		)); ?><!-- breadcrumbs -->
 	<?php endif?>

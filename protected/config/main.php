@@ -51,8 +51,6 @@ return array(
     // application components
     'components'=>array(
 
-
-
         'coreMessages'=>array(
             'basePath'=>null
         ),

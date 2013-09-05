@@ -6,6 +6,8 @@
     input,textarea { width:auto; }
 </style>
 
+
+
 <div class="form">
 
 <?php $form=$this->beginWidget('BActiveForm', array(
@@ -48,19 +50,18 @@
     </div>
 
     <div class="row">
-        <div class="<?php echo $form->fieldClass($model, 'data_nascita'); ?> span2">
-            <?php echo $form->labelEx($model,'data_nascita'); ?>
+        <div class="<?php echo $form->fieldClass($model, 'data_nascita'); ?> span4">
+            <?php echo $form->labelEx($model,'data_nascita' . ' (gg/mm/aaaa)') ; ?>
             <div class="input">
 
                 <?php
                 $this->widget('zii.widgets.jui.CJuiDatePicker',array(
-                    'name'=>'Paziente_data_nascita',
+                    'name'=>'Paziente[data_nascita]',
                     'language' => 'it',
-                    'themeUrl'=>'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes',
-                    'theme'=>'overcast',
                     'options'=>array(
                         'showAnim'=>'fold',
-                        'dateFormat'=>'dd/mm/yyyy'
+                        'dateFormat'=>'dd/mm/yyyy',
+                        'showOn' => 'button'
                     ),
                     'htmlOptions'=>array(
                         'size'=>10
@@ -77,7 +78,7 @@
             <div class="input">
                 <?php
                     $this->widget('zii.widgets.jui.CJuiAutoComplete', array(
-                        'name' => 'paziente_citta_nascita',
+                        'name' => 'Paziente[citta_nascita]',
                         'sourceUrl' => array('site/suggestComuni'),
                         'value' => $model->citta_nascita,
                         'options' => array(
@@ -176,6 +177,7 @@
     </div>
 
     <div class="actions">
+        <br/>
         <?php echo BHtml::submitButton('Avanti'); ?>
     </div>
 
@@ -186,7 +188,6 @@
 <script type="text/javascript">
 
     function AbilitaPulsanteCf (){
-        console.log("AbilitaPulsanteCf");
         var valid =  $("#Paziente_nome").val()!="" &&
                      $("#Paziente_cognome").val()!="" &&
                      $("#Paziente_data_nascita").val()!="" &&
@@ -198,7 +199,7 @@
 
     $("#btnCalcolaCf").click(function(){
 
-        var date =  ParseDate($("#Paziente_data_nascita").val()),
+        var date =  $("#Paziente_data_nascita").val().ToDate(),
             day  = date.getDate(),
             month = date.getMonth() + 1,
             year =  date.getFullYear().toString();
@@ -209,23 +210,8 @@
 
     });
 
-    //$(function() { AbilitaPulsanteCf();});
-    function ParseDate(str)
-    {
-        if ( str.indexOf('/')==2)
-        {
-            var year = str.substring(6,10);
-            var month = str.substring(3,5);
-            var day = str.substring(0,2);
-        }
-        else
-        {
-            var year = str.substring(0,4);
-            var month = str.substring(5,7);
-            var day = str.substring(8,10);
-        }
-        return new Date(year, month-1, day);
-    }
+    $(function() { AbilitaPulsanteCf();});
+
 
 
 

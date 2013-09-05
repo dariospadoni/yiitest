@@ -2,6 +2,9 @@
 
 class PrenotazioneController extends Controller
 {
+
+    public $breadcrumbsOptionsHomeLink ;
+
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
@@ -83,44 +86,93 @@ class PrenotazioneController extends Controller
         return FondoPrestazione::model()->findAll($criteria);
     }
 
-    public function actionCreate()
+    public function actionCreate( )
     {
         $model =  isset($_SESSION["prenotazione"]) ? $_SESSION["prenotazione"] : new Prenotazione();
-        $step=1;
+        $step = !isset($_GET["step"]) ? -1 : $_GET["step"] ;
+
         $prestazioni = null;
 
+        $this->breadcrumbsOptionsHomeLink = false;
         $this->performAjaxValidation($model);
         $this->performAjaxValidation(new Paziente());
+//
+//        if ($step!=-1)
+//        {
+//            switch ($step)
+//            {
+//                case 1:
+//                    unset($_SESSION['prenotazione']);
+//                    break;
+//                case 2:
+//                    $model->id_prestazione=   null;
+//                    $_SESSION["prenotazione"] = $model;
+//                    $prestazioni = $this->GetPrestazioniAssociate($model->id_fondo);
+//                    break;
+//                case 3:
+//                    //unset($_SESSION['paziente']);
+//                    break;
+//            }
+//        }
 
-        if( isset($_POST["Prenotazione"]["id_fondo"]))
-        {
-            $model->id_fondo = $_POST["Prenotazione"]["id_fondo"];
-            $prestazioni = $this->GetPrestazioniAssociate($model->id_fondo);
-            $_SESSION["prenotazione"] = $model;
-            $step = 2;
-        }
+            $step=1;
+            if( isset($_POST["Prenotazione"]["id_fondo"]))
+            {
+                $model->id_fondo = $_POST["Prenotazione"]["id_fondo"];
+                $prestazioni = $this->GetPrestazioniAssociate($model->id_fondo);
+                $_SESSION["prenotazione"] = $model;
+                $step = 2;
+            }
 
-        if( isset($_POST["Prenotazione"]["id_prestazione"]))
-        {
-            $model->id_prestazione = $_POST["Prenotazione"]["id_prestazione"];
-            $_SESSION["prenotazione"] = $model;
-            $step = 3;
-        }
+            if( isset($_POST["Prenotazione"]["id_prestazione"]))
+            {
+                $model->id_prestazione = $_POST["Prenotazione"]["id_prestazione"];
+                $_SESSION["prenotazione"] = $model;
+                $step = 3;
+            }
 
-        if( isset($_POST["Paziente"]))
-        {
-            $_SESSION["paziente"] = $_POST["Paziente"];
-            $step = 4;
-        }
+            if( isset($_POST["Paziente"]))
+            {
+                $_SESSION["paziente"] = $_POST["Paziente"];
+                $step = 4;
+            }
 
-        if(isset($_POST["confirm"]))
-        {
-            //todo: qui salvataggio prenotazione
-            unset($_SESSION['prenotazione']);
-            unset($_SESSION['paziente']);
+            if(isset($_POST["confirm"]))
+            {
+                $idPaziente=null;
+                //cerco utente per cf
+                $paziente = Paziente::model()->findByAttributes(  array('cf'=>$_SESSION["paziente"]["cf"] ));
+                if (isset($paziente))
+                {
+                    $idPaziente = $paziente->id_paziente;
+                }
+                else{
+                    $paziente = new Paziente();
+                    $paziente->attributes = $_SESSION["paziente"];
+                    if($paziente->Save())
+                        $idPaziente = $paziente->id_paziente;
+                    else
+                        throw new CException("Impossibile salvare i dati del paziente");
+                }
 
-        }
+                $prenotazione = new Prenotazione();
+                $prenotazione->id_fondo = $_SESSION["prenotazione"]["id_fondo"];
+                $prenotazione->id_prestazione = $_SESSION["prenotazione"]["id_prestazione"];
+                $prenotazione->id_paziente = $idPaziente;
+                $dataCreazione =  new DateTime('now');
+                $prenotazione->data_creazione = date( 'Y-m-d H:i:s', $dataCreazione->getTimestamp() ) ;
+                $prenotazione->assegnata=0;
 
+                if ($prenotazione->save())
+                {
+
+                    unset($_SESSION['prenotazione']);
+                    unset($_SESSION['paziente']);
+                }
+                else {
+                    throw new CException("Impossibile salvare la prenotazione");
+                }
+            }
 
         $this->layout="column1";
         $this->render('create',array(
@@ -130,8 +182,6 @@ class PrenotazioneController extends Controller
             'fondi'=>Fondo::model()->findAll()
         ));
     }
-
-
 
 
 

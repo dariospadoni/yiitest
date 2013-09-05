@@ -8,7 +8,7 @@
  * @property string $cf
  * @property string $codice_sanitario
  * @property string $nome
- * @property string $note
+ * @property string $cognome
  * @property string $sesso
  * @property string $data_nascita
  * @property string $citta_nascita
@@ -18,6 +18,10 @@
  * @property string $cap
  * @property string $telefono
  * @property string $email
+ * @property string $note
+ *
+ * The followings are the available model relations:
+ * @property Prenotazione[] $prenotaziones
  */
 class Paziente extends CActiveRecord
 {
@@ -37,10 +41,11 @@ class Paziente extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('cf, nome, cognome, telefono, sesso', 'required'),
+			array('cf, nome, cognome, sesso, telefono', 'required'),
 			array('cf', 'length', 'max'=>16),
 			array('codice_sanitario', 'length', 'max'=>20),
 			array('nome, cognome, citta_nascita, citta, email', 'length', 'max'=>100),
+			array('sesso', 'length', 'max'=>1),
 			array('indirizzo', 'length', 'max'=>250),
 			array('provincia', 'length', 'max'=>5),
 			array('cap', 'length', 'max'=>10),
@@ -48,7 +53,7 @@ class Paziente extends CActiveRecord
 			array('data_nascita, note', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id_paziente, cf, codice_sanitario, nome, cognome, data_nascita, citta_nascita, indirizzo, citta, provincia, cap, telefono, email, note', 'safe', 'on'=>'search'),
+			array('id_paziente, cf, codice_sanitario, nome, cognome, sesso, data_nascita, citta_nascita, indirizzo, citta, provincia, cap, telefono, email, note', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -60,6 +65,7 @@ class Paziente extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'prenotaziones' => array(self::HAS_MANY, 'Prenotazione', 'id_paziente'),
 		);
 	}
 
@@ -70,20 +76,20 @@ class Paziente extends CActiveRecord
 	{
 		return array(
 			'id_paziente' => 'Id Paziente',
-            'sesso'=>'Sesso',
-			'cf' => 'Codice fiscale',
-			'codice_sanitario' => 'Codice sanitario',
-            'nome' => 'Nome',
-            'cognome' => 'Cognome',
-            'data_nascita' => 'Data di nascita',
-            'citta_nascita' => 'Città di nascita',
-            'indirizzo' => 'Indirizzo',
-            'citta' => 'Città',
-            'provincia' => 'Provincia',
-            'cap' => 'CAP',
-            'telefono' => 'Telefono',
-            'email' => 'Email',
-            'note' => 'Note',
+			'cf' => 'Cf',
+			'codice_sanitario' => 'Codice Sanitario',
+			'nome' => 'Nome',
+			'cognome' => 'Cognome',
+			'sesso' => 'Sesso',
+			'data_nascita' => 'Data Nascita',
+			'citta_nascita' => 'Citta Nascita',
+			'indirizzo' => 'Indirizzo',
+			'citta' => 'Citta',
+			'provincia' => 'Provincia',
+			'cap' => 'Cap',
+			'telefono' => 'Telefono',
+			'email' => 'Email',
+			'note' => 'Note',
 		);
 	}
 
@@ -107,10 +113,10 @@ class Paziente extends CActiveRecord
 
 		$criteria->compare('id_paziente',$this->id_paziente);
 		$criteria->compare('cf',$this->cf,true);
-        $criteria->compare('sesso',$this->sesso,true);
 		$criteria->compare('codice_sanitario',$this->codice_sanitario,true);
 		$criteria->compare('nome',$this->nome,true);
 		$criteria->compare('cognome',$this->cognome,true);
+		$criteria->compare('sesso',$this->sesso,true);
 		$criteria->compare('data_nascita',$this->data_nascita,true);
 		$criteria->compare('citta_nascita',$this->citta_nascita,true);
 		$criteria->compare('indirizzo',$this->indirizzo,true);
@@ -136,6 +142,7 @@ class Paziente extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+
 
     public function nomeCompleto (){
         return $this->nome . " " . $this->cognome;

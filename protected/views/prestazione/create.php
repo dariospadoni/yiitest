@@ -2,6 +2,7 @@
 /* @var $this PrestazioneController */
 /* @var $model Prestazione */
 
+
 $this->breadcrumbs=array(
 	'Prestazioni'=>array('index'),
 	'Nuova prestazione',
