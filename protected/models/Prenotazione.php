@@ -26,7 +26,13 @@ class Prenotazione extends CActiveRecord
 	/**
 	 * @return string the associated database table name
 	 */
-	public function tableName()
+
+    public $nomePaziente;
+    public $nomePrestazione;
+    public $nomeFondo;
+
+
+    public function tableName()
 	{
 		return 'gmc_prenotazione';
 	}
@@ -41,10 +47,10 @@ class Prenotazione extends CActiveRecord
 		return array(
 			array('id_fondo, id_prestazione, id_paziente', 'required'),
 			array('id_fondo, id_prestazione, id_paziente, assegnata, id_user', 'numerical', 'integerOnly'=>true),
-			array('data_creazione, data_visita, note_paziente, note_gmc', 'safe'),
+			array('data_creazione, data_visita, note_paziente, note_gmc, nomePaziente', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id_prenotazione, id_fondo, id_prestazione, id_paziente, data_creazione, data_visita, assegnata, note_paziente, note_gmc, id_user', 'safe', 'on'=>'search'),
+			array('id_prenotazione, id_fondo, id_prestazione, id_paziente, d3ata_creazione, data_visita, assegnata, note_paziente, note_gmc, id_user, nomePaziente',  'safe', 'on'=>'search'),
 		);
 	}
 
@@ -73,14 +79,27 @@ class Prenotazione extends CActiveRecord
 			'id_fondo' => 'Id Fondo',
 			'id_prestazione' => 'Id Prestazione',
 			'id_paziente' => 'Id Paziente',
-			'data_creazione' => 'Data Creazione',
+			'data_creazione' => 'Data inserimento',
 			'data_visita' => 'Data Visita',
 			'assegnata' => 'Assegnata',
 			'note_paziente' => 'Note Paziente',
 			'note_gmc' => 'Note Gmc',
 			'id_user' => 'Id User',
+            'nomePaziente'=>'Nome paziente',
 		);
 	}
+
+
+
+    public function afterFind(){
+        parent::afterFind();
+        $paziente = Paziente::model()->findByPk($this->id_paziente);
+        $prestazione = Prestazione::model()->findByPk($this->id_prestazione);
+        $fondo = Fondo::model()->findByPk($this->id_fondo);
+        $this->nomePaziente = $paziente->nomeCompleto();
+        $this->nomePrestazione = $prestazione->nome;
+        $this->nomeFondo = $fondo->nome;
+    }
 
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
@@ -110,6 +129,8 @@ class Prenotazione extends CActiveRecord
 		$criteria->compare('note_paziente',$this->note_paziente,true);
 		$criteria->compare('note_gmc',$this->note_gmc,true);
 		$criteria->compare('id_user',$this->id_user);
+        $criteria->with = array('idPaziente');
+        $criteria->compare('idPaziente.cognome',$this->nomePaziente);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

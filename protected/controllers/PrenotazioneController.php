@@ -4,7 +4,8 @@ class PrenotazioneController extends Controller
 {
 
     public $breadcrumbsOptionsHomeLink ;
-
+    public $searchModel;
+    public $specializzazioni;
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
@@ -234,10 +235,17 @@ class PrenotazioneController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Prenotazione');
-		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
-		));
+
+        $p = new Prenotazione("search");
+        $p->unsetAttributes();  // clear any default values
+        if (isset($_GET["Prenotazione"])){
+            $p->attributes = $_GET["Prenotazione"];
+        }
+        $this->searchModel = $p;
+        $this->layout="searchColumn";
+        $this->render('index',array(
+            'model'=>$p,
+        ));
 	}
 
 	/**

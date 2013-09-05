@@ -6,30 +6,16 @@
 )); ?>
 
 	<div class="clearfix">
-		<?php echo $form->label($model,'id_prenotazione'); ?>
+		<?php echo $form->label($model,'nome_prestazione'); ?>
 		<div class="input">
-			<?php echo $form->textField($model,'id_prenotazione'); ?>
+            <?php echo $form->ListBox   ($model,'id_prestazione', CHtml::listData( Prestazione::model()->findAll(), 'id_prestazione', 'nome'),array('multiple' => 'true' )   ); ?>
 		</div>
 	</div>
 
 	<div class="clearfix">
-		<?php echo $form->label($model,'id_fondo'); ?>
+		<?php echo $form->label($model,'cognome_paziente'); ?>
 		<div class="input">
-			<?php echo $form->textField($model,'id_fondo'); ?>
-		</div>
-	</div>
-
-	<div class="clearfix">
-		<?php echo $form->label($model,'id_prestazione'); ?>
-		<div class="input">
-			<?php echo $form->textField($model,'id_prestazione'); ?>
-		</div>
-	</div>
-
-	<div class="clearfix">
-		<?php echo $form->label($model,'id_paziente'); ?>
-		<div class="input">
-			<?php echo $form->textField($model,'id_paziente'); ?>
+			<?php echo $form->textField($model,'nomePaziente'); ?>
 		</div>
 	</div>
 
@@ -54,26 +40,6 @@
 		</div>
 	</div>
 
-	<div class="clearfix">
-		<?php echo $form->label($model,'note_paziente'); ?>
-		<div class="input">
-			<?php echo $form->textArea($model,'note_paziente',array('rows'=>6, 'cols'=>50)); ?>
-		</div>
-	</div>
-
-	<div class="clearfix">
-		<?php echo $form->label($model,'note_gmc'); ?>
-		<div class="input">
-			<?php echo $form->textArea($model,'note_gmc',array('rows'=>6, 'cols'=>50)); ?>
-		</div>
-	</div>
-
-	<div class="clearfix">
-		<?php echo $form->label($model,'id_user'); ?>
-		<div class="input">
-			<?php echo $form->textField($model,'id_user'); ?>
-		</div>
-	</div>
 
 	<div class="actions">
 		<?php echo BHtml::submitButton('Search'); ?>
