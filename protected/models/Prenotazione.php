@@ -81,11 +81,12 @@ class Prenotazione extends CActiveRecord
 			'id_paziente' => 'Id Paziente',
 			'data_creazione' => 'Data inserimento',
 			'data_visita' => 'Data Visita',
-			'assegnata' => 'Assegnata',
+			'assegnata' => 'Confermate',
 			'note_paziente' => 'Note Paziente',
 			'note_gmc' => 'Note Gmc',
 			'id_user' => 'Id User',
-            'nomePaziente'=>'Nome paziente',
+            'nomePaziente'=>'Paziente',
+            'nomePrestazione'=>'Prestazione'
 		);
 	}
 
@@ -123,7 +124,9 @@ class Prenotazione extends CActiveRecord
 		$criteria->compare('id_fondo',$this->id_fondo);
 		$criteria->compare('id_prestazione',$this->id_prestazione);
 		$criteria->compare('id_paziente',$this->id_paziente);
-		$criteria->compare('data_creazione',$this->data_creazione,true);
+        if(isset($this->data_creazione) && $this->data_creazione!='')
+            $criteria->addCondition("DATE_FORMAT ( data_creazione,  '%d/%m/%Y' )  ='" . $this->data_creazione . "'");
+//		$criteria->compare('data_creazione',$this->data_creazione,true);
 		$criteria->compare('data_visita',$this->data_visita,true);
 		$criteria->compare('assegnata',$this->assegnata);
 		$criteria->compare('note_paziente',$this->note_paziente,true);

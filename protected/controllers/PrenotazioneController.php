@@ -26,12 +26,12 @@ class PrenotazioneController extends Controller
         $res = new JsonResult();
         if(!$this->IsNullOrEmpty($idFondo))
         {
-            $model = Fondo::model()->findByPk($idFondo);
-            $data=CHtml::listData($model->prestazioniAssociate,'id_prestazione', 'nome');
+
+            $data=CHtml::listData($this->GetPrestazioniAssociate($idFondo),'id_prestazione', 'nomePrestazione');
             $options="";
             foreach($data as $value=>$name)
             {
-                $options = $options. CHtml::tag('option',
+                $options = $options . CHtml::tag('option',
                         array('value'=>$value),CHtml::encode($name),true);
             }
             $res->success = true;
@@ -49,7 +49,7 @@ class PrenotazioneController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','prestazioniAssociate','stepOne'),
+				'actions'=>array('index','view','prestazioniAssociate' ),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -72,8 +72,11 @@ class PrenotazioneController extends Controller
 	 */
 	public function actionView($id)
 	{
+        $model =$this->loadModel($id);
+        $paziente= Paziente::model()->findByPk($model->id_paziente);
 		$this->render('view',array(
-			'model'=>$this->loadModel($id),
+			'model'=>$model,
+            'paziente'=> $paziente
 		));
 	}
 
@@ -194,7 +197,7 @@ class PrenotazioneController extends Controller
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
-
+        $paziente= Paziente::model()->findByPk($model->id_paziente);
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
@@ -204,9 +207,12 @@ class PrenotazioneController extends Controller
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id_prenotazione));
 		}
+        $prestazioni = $this->GetPrestazioniAssociate($model->id_fondo);
 
 		$this->render('update',array(
 			'model'=>$model,
+            'paziente'=>$paziente,
+            'prestazioni'=>$prestazioni,
 		));
 	}
 

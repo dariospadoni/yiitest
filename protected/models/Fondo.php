@@ -22,7 +22,6 @@ class Fondo extends CActiveRecord
         if( !$this->isNewRecord()){
 
             $this->GetPrestazioniAssociate();
-
             $this->GetPrestazioniNonAssociate();
         }
         else{

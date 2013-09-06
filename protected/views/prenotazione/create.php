@@ -41,7 +41,9 @@ if ($step==4){
 //        'Dati personali'=>array('create','step'=>3),
 //        'Riepilogo'=>array('create','step'=>4),
 //    );
-    echo $this->renderPartial('_formRiepilogo', array('model'=>$model));
+    $paziente = new Paziente();
+    $paziente->attributes = $_SESSION["paziente"];
+    echo $this->renderPartial('_formRiepilogo', array('model'=>$model, 'paziente'=>$paziente));
 }
 
 ?>

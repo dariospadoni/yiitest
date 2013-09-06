@@ -17,9 +17,9 @@
 
     <div class="view">
 
-        <?php
-        $paziente = $_SESSION["paziente"];
-        ?>
+<!--        --><?php
+//        $paziente = $_SESSION["paziente"];
+//        ?>
 
         <div class="row">
             <div class="span5">
@@ -99,9 +99,12 @@
     </div>
 
 
-
     <div class="actions">
-        <?php echo BHtml::submitButton( 'Conferma' , array('name'=>"confirm")); ?>
+        <br/>
+        <?php
+            if($mode !="view")
+                echo BHtml::submitButton( 'Conferma' , array('name'=>"confirm"));
+        ?>
     </div>
 
 

@@ -60,7 +60,7 @@
                     'language' => 'it',
                     'options'=>array(
                         'showAnim'=>'fold',
-                        'dateFormat'=>'dd/mm/yyyy',
+                       // 'dateFormat'=>'dd/mm/yyyy',
                         'showOn' => 'button'
                     ),
                     'htmlOptions'=>array(
