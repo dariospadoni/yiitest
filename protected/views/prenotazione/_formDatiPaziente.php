@@ -60,8 +60,8 @@
                     'language' => 'it',
                     'options'=>array(
                         'showAnim'=>'fold',
-                       // 'dateFormat'=>'dd/mm/yyyy',
-                        'showOn' => 'button'
+                        'showOn' => 'button',
+                        'maxDate' => 'new Date()',
                     ),
                     'htmlOptions'=>array(
                         'size'=>10

@@ -14,19 +14,11 @@ $this->menu=array(
 <?php $this->widget('zii.widgets.grid.CGridView', array(
     'id'=>'prenotazione-grid',
     'dataProvider'=>$model->search(),
- //   'filter'=>$model,
     'columns'=>array(
         'nomePaziente',
-       // 'nomeFondo',
         'nomePrestazione',
         'data_creazione',
-        /*
-        'assegnata',
-        'note_paziente',
-        'note_gmc',
-        'id_user',
-        */
-        array(
+         array(
             'class'=>'CButtonColumn',
         ),
     ),

@@ -94,7 +94,7 @@
                         'language' => 'it',
                         'options'=>array(
                             'showAnim'=>'fold',
-                            // 'dateFormat'=>'dd/mm/yyyy',
+                            'maxDate' => 'new Date()',
                             'showOn' => 'button'
                         ),
                         'htmlOptions'=>array(

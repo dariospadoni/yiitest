@@ -40,6 +40,7 @@
 						array('label'=>'Prestazioni', 'url'=>array('/prestazione/index'),'visible'=> Yii::app()->user->isAdmin() ),
                         array('label'=>'Medici', 'url'=>array('/medico/index'),'visible'=> Yii::app()->user->isAdmin() ),
                         array('label'=>'Pazienti', 'url'=>array('/paziente/index'),'visible'=> Yii::app()->user->isAdmin() ),
+                        array('label'=>'Feedback', 'url'=>array('/feedback/index'),'visible'=> Yii::app()->user->isAdmin() ),
 					),
 					'htmlOptions'=>array(
 						'class'=>'nav',

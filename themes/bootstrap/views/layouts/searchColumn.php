@@ -11,16 +11,18 @@
 			<div class="span2" style="margin-left:10px;">
 
 
-                <span class="nav-header">Menu</span>
-				<?php
-					$this->beginWidget('zii.widgets.CPortlet', array(
-					));
-					$this->widget('zii.widgets.CMenu', array(
-						'items'=>$this->menu,
-						'htmlOptions'=>array('class'=>'nav nav-list'),
-					));
-					$this->endWidget();
-				?>
+                <?php if ($this->menu) { ?>
+                    <span class="nav-header">Menu</span>
+                    <?php
+                        $this->beginWidget('zii.widgets.CPortlet', array(
+                        ));
+                        $this->widget('zii.widgets.CMenu', array(
+                            'items'=>$this->menu,
+                            'htmlOptions'=>array('class'=>'nav nav-list'),
+                        ));
+                        $this->endWidget();
+                    ?>
+                <?php } ?>
 
                 <span class="nav-header">Cerca</span>
                 <?php $this->renderPartial('_search',array(
