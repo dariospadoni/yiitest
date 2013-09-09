@@ -60,6 +60,7 @@
                     'language' => 'it',
                     'options'=>array(
                         'showAnim'=>'fold',
+
                         'showOn' => 'button',
                         'maxDate' => 'new Date()',
                     ),

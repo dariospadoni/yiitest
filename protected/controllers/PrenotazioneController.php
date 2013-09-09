@@ -49,7 +49,7 @@ class PrenotazioneController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','prestazioniAssociate' ),
+				'actions'=>array('index','view','prestazioniAssociate','calendar','calendarEvents' ),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -188,6 +188,49 @@ class PrenotazioneController extends Controller
     }
 
 
+    public function actionCalendar (){
+        $p =   new Prenotazione("search" );
+        $p->unsetAttributes();  // clear any default values
+        if (isset($_GET["Prenotazione"])){
+            $p->attributes = $_GET["Prenotazione"];
+        }
+        $this->searchModel = $p;
+        $this->layout="searchCalendar";
+        $this->render('calendar',array(
+
+        ));
+    }
+
+    public function actionCalendarEvents($start = 0, $end = 0,  $cognome_paziente=""){
+
+        $criteria = new CDbCriteria( );
+        $criteria->addBetweenCondition('UNIX_TIMESTAMP(data_visita)', $start, $end);
+        if($_GET["id_prestazione"]!="")
+        {
+            $criteria->addInCondition('id_prestazione',$_GET["id_prestazione"]);
+        }
+        if($cognome_paziente!="")
+        {
+            $criteria->with = array('idPaziente');
+            $criteria->addCondition('idPaziente.cognome like "'.$cognome_paziente.'%"');
+        }
+
+        $p = Prenotazione::model()->findAll( $criteria );
+//
+//        $p = new Prenotazione("search" );
+//        $p->unsetAttributes();  // clear any default values
+//
+//        if (isset($_GET["Prenotazione"])){
+//            $p->attributes = $_GET["Prenotazione"];
+//        }
+
+        $prenotazioni = array();
+        foreach($p as $prest)
+            array_push($prenotazioni, new PrenotazioneDTO($prest));
+        echo CJSON::encode($prenotazioni);
+
+    }
+
 
 	/**
 	 * Updates a particular model.
@@ -204,6 +247,9 @@ class PrenotazioneController extends Controller
 		if(isset($_POST['Prenotazione']))
 		{
 			$model->attributes=$_POST['Prenotazione'];
+            if(isset ($model->data_visita))
+                $model->data_visita = date( 'Y-m-d H:i:s', strtotime($model->data_visita) ) ;
+            $model->id_user = Yii::app()->user->id;
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id_prenotazione));
 		}

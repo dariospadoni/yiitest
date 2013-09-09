@@ -27,6 +27,7 @@
                 <span class="nav-header">Cerca</span>
                 <?php $this->renderPartial('_searchCalendar',array(
                     'model'=>$this->searchModel,
+                    'specializzazioni'=>$this->specializzazioni
                 )); ?>
 
 

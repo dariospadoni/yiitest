@@ -10,9 +10,10 @@ $this->breadcrumbs=array(
 
 $this->menu=array(
 	array('label'=>'Lista prenotazioni', 'url'=>array('index')),
+    array('label'=>'Calendario visite', 'url'=>array('calendar')),
 	array('label'=>'Nuova prenotazione', 'url'=>array('create')),
 	array('label'=>'Visualizza prenotazione', 'url'=>array('view', 'id'=>$model->id_prenotazione)),
-	array('label'=>'Gestione prenotazioni', 'url'=>array('admin')),
+	//array('label'=>'Gestione prenotazioni', 'url'=>array('admin')),
 );
 ?>
 

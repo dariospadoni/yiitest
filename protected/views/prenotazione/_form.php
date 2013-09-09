@@ -53,6 +53,50 @@
 
     <div class="well well-small">
 
+        <b>Visita</b>
+
+            <div class="row">
+
+                <div class="<?php echo $form->fieldClass($model, 'data_visita'); ?> span4">
+                    <?php echo $form->label($model,'data_visita' , array('style'=>'display:inline-block;') ) ; ?>
+
+                    <?php
+
+                    $this->widget('ext.timepicker.EJuiDateTimePicker',array(
+                        'name'=>'Prenotazione[data_visita]',
+                        'language' => 'it',
+                        'value'=>$model->data_visita,
+                        'options'=>array(
+                            'hourMin'=>6,
+                            'hourMax'=>22,
+                            'showAnim'=>'fold',
+                            'showOn' => 'button',
+                            'hourGrid' => 4,
+                            'stepMinute'=>10,
+                            'minuteGrid'=>10,
+                            'hourText'=>'Ora',
+                            'minuteText'=>'Minuti',
+                            'controlType'=>'select',
+                            'currentText'=>'Adesso'
+                        ),
+                        'htmlOptions'=>array(
+                            'size'=>20
+                        ),
+                    ));
+                    ?>
+
+                    <?php echo $form->error($model,'data_visita'); ?>
+
+                </div>
+
+
+
+            </div>
+        </div>
+
+
+    <div class="well well-small">
+
         <b>Dati paziente</b>
 
         <div class="row">
@@ -94,7 +138,7 @@
                         'language' => 'it',
                         'options'=>array(
                             'showAnim'=>'fold',
-                            'maxDate' => 'new Date()',
+                            // 'dateFormat'=>'dd/mm/yyyy',
                             'showOn' => 'button'
                         ),
                         'htmlOptions'=>array(

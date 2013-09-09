@@ -3,3 +3,4 @@
 .span2 {width:170px;}
 [class*="span"] {margin-left:0px;}
 input, textarea { width:auto; }
+.grid-view table.items th  {text-align: left; }

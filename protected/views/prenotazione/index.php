@@ -8,6 +8,7 @@ $this->breadcrumbs=array(
 
 $this->menu=array(
 	array('label'=>'Nuova prenotazione', 'url'=>array('create')),
+    array('label'=>'Calendario visite', 'url'=>array('calendar')),
 );
 ?>
 
@@ -17,7 +18,15 @@ $this->menu=array(
     'columns'=>array(
         'nomePaziente',
         'nomePrestazione',
-        'data_creazione',
+        array(
+            'name'=>'data_creazione',
+            'value'=>'Yii::app()->dateFormatter->format("dd/MM/y HH:mm",strtotime($data->data_creazione))'
+        ),
+        array(
+            'name'=>'data_visita',
+            'value'=>'Yii::app()->dateFormatter->format("dd/MM/y HH:mm",strtotime($data->data_visita))'
+        ),
+
          array(
             'class'=>'CButtonColumn',
         ),

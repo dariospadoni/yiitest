@@ -46,6 +46,10 @@ return array(
 
         ),
 
+        'cal' => array(
+            'debug' => true // For first run only!
+        ),
+
     ),
 
     // application components

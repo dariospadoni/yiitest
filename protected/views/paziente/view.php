@@ -1,5 +1,5 @@
 <style>
-    th {text-align: left; color:#888; font-weight: normal;font-size: small;}
+
     #tblDettPaziente { width:100%;}
 </style>
 <?php

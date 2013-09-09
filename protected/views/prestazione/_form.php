@@ -11,6 +11,7 @@
     Yii::import('ext.yii-redactor.ERedactorWidget');
 ?>
 
+<?php $form->hiddenField($model,'data_creazione'); ?>
 
 <?php $this->widget('BAlert',array( 'content'=>'<p>I campi contrassegnati da <span class="required">*</span> sono obbligatori.</p>' )); ?>
 
