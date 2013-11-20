@@ -65,16 +65,16 @@ return array(
             'class' => 'WebUser',
         ),
         // uncomment the following to enable URLs in path-format
-        /*
-        'urlManager'=>array(
-            'urlFormat'=>'path',
-            'rules'=>array(
-                '<controller:\w+>/<id:\d+>'=>'<controller>/view',
-                '<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
-                '<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
-            ),
-        ),
-        */
+//
+//        'urlManager'=>array(
+//            'urlFormat'=>'path',
+//            'rules'=>array(
+//                'admin/<controller:\w+>/<id:\d+>'=>'<controller>/view',
+//                'admin/<controller:\w+>/<action:\w+>/<id:\d+>'=>'admin/<controller>/<action>',
+//                'admin/<controller:\w+>/<action:\w+>'=>'admin/<controller>/<action>',
+//            ),
+//        ),
+
         /*
 		'db'=>array(
 			'connectionString' => 'sqlite:'.dirname(__FILE__).'/../data/testdrive.db',

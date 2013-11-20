@@ -14,8 +14,8 @@
                 <?php if ($this->menu) { ?>
                     <span class="nav-header">Menu</span>
                     <?php
-                        $this->beginWidget('zii.widgets.CPortlet', array(
-                        ));
+                        $this->beginWidget('zii.widgets.CPortlet', array( ));
+
                         $this->widget('zii.widgets.CMenu', array(
                             'items'=>$this->menu,
                             'htmlOptions'=>array('class'=>'nav nav-list'),
@@ -25,8 +25,9 @@
                 <?php } ?>
 
                 <span class="nav-header">Cerca</span>
-                <?php $this->renderPartial('_searchCalendar',array(
+                <?php $this->renderPartial('_search',array(
                     'model'=>$this->searchModel,
+                    'specializzazioni'=>$this->specializzazioni
                 )); ?>
 
 

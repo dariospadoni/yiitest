@@ -66,6 +66,17 @@ class UserMedico  extends CFormModel {
             'criteria'=>$criteria,
         ));
     }
+}
 
+class UserMedicoAlphaPaged extends UserMedico {
+
+    public function search()
+    {
+        Yii::import('ext.alphapager.ApActiveDataProvider');
+
+        return new ApActiveDataProvider(get_class($this), array(
+            'alphapagination'=>array( 'attribute'=>'cognome' )
+        ));
+    }
 
 }

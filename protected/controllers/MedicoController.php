@@ -182,6 +182,49 @@ class MedicoController extends Controller
 	 */
 	public function actionIndex()
 	{
+
+        Yii::app()->theme = 'gmc';
+        $this->layout="column2";
+        Yii::import('ext.alphapager.ApActiveDataProvider');
+
+        $criteria = new CDbCriteria;
+        $criteria->order = "cognome,nome";
+        $criteria->condition = "tipo='medico' ";
+
+        // This is just for disabling buttons which have no results
+        $acCriteria=new CDbCriteria;
+        $acCriteria->select='DISTINCT(SUBSTR(`cognome`,1,1)) AS `cognome`';
+        $chars = User::model()->findAll($acCriteria);
+        foreach($chars as $char)
+            $activeChars[]=$char->cognome;
+
+        $dataprovider = new ApActiveDataProvider('User',
+            array(
+                'alphapagination'=>array(
+                'attribute'=>'Cognome',
+                'activeCharSet'=>$activeChars
+            ),
+            'pagination'=>array('pageSize'=>1000),
+            'criteria'=>$criteria)
+        );
+
+        $this->render('index',array(
+            'dataProvider'=>$dataprovider,
+        ));
+//
+//        $criteria=new CDbCriteria;
+//        $alphaPages = new ApPagination('cognome');
+//        $alphaPages->applyCondition($criteria);
+//
+
+//
+//        $this->render('index',array(
+//                'alphaPages'=>$alphaPages, // Just like passing e.g. $pages to your view
+//        ));
+
+
+
+/*
         $model=new UserMedico(null);
 
         $data =  Array();
@@ -204,14 +247,17 @@ class MedicoController extends Controller
         )) ;
 
         $this->searchModel = $model;
+
+        Yii::app()->theme = 'gmc';
+
         $this->specializzazioni=$specializzazioni;
-        $this->layout="searchColumn";
+        $this->layout="column2";
 		$this->render('index',array(
 			'model'=>$model,
             'dataProvider'=>$dataProvider,
             'specializzazioni'=>$specializzazioni
 		));
-
+*/
 	}
 
     public function actionSearch()
@@ -282,15 +328,48 @@ class MedicoController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new Medico( "search");
-		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['Medico']))
-			$model->attributes=$_GET['Medico'];
+//		$model=new Medico( "search");
+//		$model->unsetAttributes();  // clear any default values
+//		if(isset($_GET['Medico']))
+//			$model->attributes=$_GET['Medico'];
+//
+//
+//		$this->render('admin',array(
+//			'model'=>$model,
+//		));
 
 
-		$this->render('admin',array(
-			'model'=>$model,
-		));
+        $model=new UserMedico(null);
+
+        $data =  Array();
+        $criteria = new CDbCriteria;
+        $criteria->order = "cognome,nome";
+        $criteria->condition = "tipo='medico'";
+        $userMedici = User::model()->findAll($criteria );
+
+        foreach ($userMedici as $user)
+            array_push($data, new UserMedico($user));
+
+
+        $dataProvider=new CArrayDataProvider ($data,array(
+            'keyField'=>'id_user',
+        ));
+
+        $specializzazioni = Medico::model()->findAll (array(
+            'select'=>'specializzazione',
+            'distinct'=>true,
+        )) ;
+
+        $this->searchModel = $model;
+
+        $this->specializzazioni=$specializzazioni;
+        $this->layout="searchColumn";
+        $this->render('admin',array(
+            'model'=>$model,
+            'dataProvider'=>$dataProvider,
+            'specializzazioni'=>$specializzazioni
+        ));
+
 	}
 
 	/**

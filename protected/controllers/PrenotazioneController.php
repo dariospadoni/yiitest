@@ -196,9 +196,7 @@ class PrenotazioneController extends Controller
         }
         $this->searchModel = $p;
         $this->layout="searchCalendar";
-        $this->render('calendar',array(
-
-        ));
+        $this->render('calendar',array());
     }
 
     public function actionCalendarEvents($start = 0, $end = 0,  $cognome_paziente=""){
